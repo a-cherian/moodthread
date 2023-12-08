@@ -1,5 +1,5 @@
 //
-//  SliderItemView.swift
+//  SliderCell.swift
 //  Moodthread
 //
 //  Created by AC on 10/20/23.
@@ -7,11 +7,17 @@
 
 import UIKit
 
-class SliderItemView: UIView, ItemHolder {
+class SliderCell: UICollectionViewCell, FieldCell {
+    
+    static let identifier = "slider"
+    weak var delegate: FieldCellDelegate?
+    var position = -1
+    
     typealias T = Float
-    var value: Float = 3
-    var minValue: Float = 1
-    var maxValue: Float = 5
+    var type: Type = .slider
+    var label: String = ""
+    var value: Float = 0
+    var initialized: Bool = false
     
     lazy var itemLabel: UILabel = {
         let label = UILabel()
@@ -28,22 +34,13 @@ class SliderItemView: UIView, ItemHolder {
         slider.maximumValueImage = UIImage(systemName: "plus")
         slider.tintColor = .cyan
         
-        slider.addTarget(self, action: #selector(didSizeChange), for: UIControl.Event.valueChanged)
+        slider.addTarget(self, action: #selector(didValueChange), for: UIControl.Event.valueChanged)
         return slider
     }()
     
-    init(label: String, min: Float, max: Float) {
-        super.init(frame: CGRectZero)
-        
-        translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .black
-        layer.cornerRadius = 10
-        
-        self.value = min + max / 2
-        minValue = min
-        maxValue = max
-        
-        itemLabel.text = label
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.backgroundColor = .black
         
         addSubviews()
         configureUI()
@@ -53,15 +50,9 @@ class SliderItemView: UIView, ItemHolder {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func initialize() {
-        valueSlider.minimumValue = minValue
-        valueSlider.maximumValue = maxValue
-        valueSlider.value = (minValue + maxValue) / 2
-    }
-    
     func addSubviews() {
-        addSubview(valueSlider)
-        addSubview(itemLabel)
+        contentView.addSubview(valueSlider)
+        contentView.addSubview(itemLabel)
     }
     
     func configureUI() {
@@ -89,8 +80,9 @@ class SliderItemView: UIView, ItemHolder {
         ])
     }
     
-    @objc func didSizeChange() {
+    @objc func didValueChange() {
         value = valueSlider.value
+        delegate?.didChangeValue(value: value, position: position)
     }
 }
 
