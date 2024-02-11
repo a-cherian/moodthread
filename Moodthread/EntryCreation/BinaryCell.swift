@@ -18,10 +18,10 @@ class BinaryCell: UICollectionViewCell, FieldCell {
     var label: String = ""
     var value: Bool = false {
         didSet {
-            trueButton.backgroundColor = value ? .cyan : .black
+            trueButton.backgroundColor = value ? Appearance().tintColor : .black
             trueButton.tintColor = value ? .black : .white
             
-            falseButton.backgroundColor = value ? .black : .cyan
+            falseButton.backgroundColor = value ? .black : Appearance().tintColor
             falseButton.tintColor = value ? .white : .black
         }
     }
@@ -39,7 +39,7 @@ class BinaryCell: UICollectionViewCell, FieldCell {
         let button = UIButton()
         
         button.setImage(UIImage(systemName: "checkmark"), for: .normal)
-        button.backgroundColor = value ? .cyan : .black
+        button.backgroundColor = value ? Appearance().tintColor : .black
         button.tintColor = value ? .black : .white
         button.layer.cornerRadius = 10
         
@@ -51,7 +51,7 @@ class BinaryCell: UICollectionViewCell, FieldCell {
         let button = UIButton()
         
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.backgroundColor = value ? .black : .cyan
+        button.backgroundColor = value ? .black : Appearance().tintColor
         button.tintColor = value ? .white : .black
         button.layer.cornerRadius = 10
         

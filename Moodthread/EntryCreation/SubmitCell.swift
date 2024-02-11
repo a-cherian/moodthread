@@ -15,20 +15,13 @@ class SubmitCell: UICollectionViewCell {
     weak var delegate: SubmitDelegate?
     static let identifier = "submit"
     
-    var value: Bool = false {
-        didSet {
-            submitButton.backgroundColor = value ? .cyan : .black
-            submitButton.setTitleColor(value ? .black : .white, for: .normal)
-        }
-    }
-    
     lazy var submitButton: UIButton = {
         let button = UIButton()
         
-        button.backgroundColor = value ? .cyan : .black
+        button.backgroundColor = .black
         button.layer.cornerRadius = 10
         button.setTitle("Submit", for: .normal)
-        button.setTitleColor(value ? .black : .white, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         
         button.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
         return button
@@ -52,11 +45,6 @@ class SubmitCell: UICollectionViewCell {
     
     func configureUI() {
         configureSubmitButton()
-        submitButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            submitButton.heightAnchor.constraint(equalToConstant: 75),
-            submitButton.widthAnchor.constraint(equalToConstant: 200)
-        ])
     }
     
     func configureSubmitButton() {
@@ -65,7 +53,9 @@ class SubmitCell: UICollectionViewCell {
             submitButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             submitButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             submitButton.bottomAnchor.constraint(equalTo: bottomAnchor),
-            submitButton.topAnchor.constraint(equalTo: topAnchor)
+            submitButton.topAnchor.constraint(equalTo: topAnchor),
+            submitButton.heightAnchor.constraint(equalToConstant: 75),
+            submitButton.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
     

@@ -32,7 +32,7 @@ class SliderCell: UICollectionViewCell, FieldCell {
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.minimumValueImage = UIImage(systemName: "minus")
         slider.maximumValueImage = UIImage(systemName: "plus")
-        slider.tintColor = .cyan
+        slider.tintColor = Appearance().tintColor
         
         slider.addTarget(self, action: #selector(didValueChange), for: UIControl.Event.valueChanged)
         return slider

@@ -1,0 +1,42 @@
+@startuml
+!theme mars
+class           Entry {
+}
+class           Field {
+}
+Entry -> Field : contains
+
+class UICollectionView
+class UICollectionViewCell
+class EntryListViewController
+class EntryCreationViewController
+protocol FieldCell
+class SliderCell
+class NumberCell
+class SelectCell
+class BinaryCell
+class SubmitCell
+class DeleteCell
+class EntryCell
+class DateCell
+
+UICollectionView -up-> EntryListViewController : delegated by
+UICollectionView -> EntryCreationViewController : delegated by
+UICollectionView <-down- EntryListViewController : contains
+UICollectionView <- EntryCreationViewController : contains
+FieldCell --|> UICollectionViewCell
+EntryCell --|> UICollectionViewCell
+DateCell --|> UICollectionViewCell
+SliderCell --|> FieldCell
+NumberCell --|> FieldCell
+SelectCell --|> FieldCell
+BinaryCell --|> FieldCell
+SubmitCell --|> UICollectionViewCell
+DeleteCell --|> UICollectionViewCell
+UICollectionViewCell <-left- UICollectionView : displays
+EntryListViewController -down-> Entry : contains array of
+EntryCreationViewController -down-> Field : contains array of
+EntryCreationViewController -down-> Entry : creates
+EntryListViewController -> EntryCreationViewController : presents
+hide empty members
+@enduml

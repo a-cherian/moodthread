@@ -1,5 +1,5 @@
 //
-//  CoreDataManager.swift
+//  DataManager.swift
 //  Moodthread
 //
 //  Created by AC on 11/2/23.
@@ -7,9 +7,9 @@
 
 import CoreData
 
-struct CoreDataManager {
+struct DataManager {
     
-    static let shared = CoreDataManager()
+    static let shared = DataManager()
     
     let persistentContainer: NSPersistentContainer = {
         ValueTransformer.setValueTransformer(FieldDataTransformer(), forName: .fieldToDataTransformer)
@@ -58,6 +58,7 @@ struct CoreDataManager {
     
     func updateEntry(entry: Entry) {
         let context = persistentContainer.viewContext
+        print(context.updatedObjects)
         
         do {
             try context.save()
@@ -88,5 +89,14 @@ struct CoreDataManager {
         } catch let saveError {
             print("Failed to update: \(saveError)")
         }
+    }
+    
+    func getCustomFields() -> [ItemConfiguration] {
+        let userDefaults = UserDefaults.standard
+        if let customConfigs = userDefaults.array(forKey: Constants.CUSTOM_FIELDS_KEY) as? [[String]] {
+            let unpacked = customConfigs.compactMap { ItemConfiguration.unstringify(string: $0) }
+            return unpacked
+        }
+        return []
     }
 }

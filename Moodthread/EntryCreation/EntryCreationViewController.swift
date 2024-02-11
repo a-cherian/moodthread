@@ -7,33 +7,29 @@
 
 import UIKit
 
-class EntryCreationViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SubmitDelegate, FieldCellDelegate {
+class EntryCreationViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SubmitDelegate, DeleteDelegate, FieldCellDelegate {
     
-//    var items: [Field] = [Field(config: NumberConfiguration(label: "Mood", type: .slider, min: 1, max: 5), value: Float(3)),
-//                          Field(config: NumberConfiguration(label: "Energy", type: .slider, min: 1, max: 5), value: Float(3)),
-//                          Field(config: ItemConfiguration(label: "Toggle", type: .binary), value: false),
-//                          Field(config: NumberConfiguration(label: "Number", type: .number, min: -5, max: 10000), value: 23)]
-    var items: [Field] = [Field(config: NumberConfiguration(label: "Mood", type: .slider, min: 1, max: 5), value: Float(3)),
-                          Field(config: NumberConfiguration(label: "Energy", type: .slider, min: 1, max: 5), value: Float(3))]
+    let defaultFields: [Field] = [Field(config: NumberConfiguration(label: "Mood", type: .slider, min: 0, max: 5), value: Float(2.5)),
+                          Field(config: NumberConfiguration(label: "Energy", type: .slider, min: 0, max: 5), value: Float(2.5))]
+    var fields: [Field] = []
+    
+    var date: Date? = nil
+    var timer: Timer? = nil
+    var previousEntry: Entry? = nil
     
     var dismissTap = UITapGestureRecognizer()
     lazy var clock: UILabel = {
         let label = UILabel()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE — MMM d — h:mm a"
-        label.text = dateFormatter.string(from: Date())
+        label.text = dateFormatter.string(from: date ?? Date())
         label.textColor = .black
         label.textAlignment = .center
         return label
     }()
     
-    lazy var itemsView: UICollectionView = {
-//        let layoutConfig = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-//        let listLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
+    lazy var fieldsView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-//        layout.itemSize = CGSize(width: view.frame.width - 40, height: 120)
-//        layout.estimatedItemSize = CGSize(width: view.frame.width - 40, height: 120)
-//        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         layout.scrollDirection = .vertical
         let collection = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         collection.backgroundColor = .white
@@ -47,21 +43,63 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         collection.register(SelectCell.self, forCellWithReuseIdentifier: SelectCell.identifier)
         collection.register(BinaryCell.self, forCellWithReuseIdentifier: BinaryCell.identifier)
         collection.register(SubmitCell.self, forCellWithReuseIdentifier: SubmitCell.identifier)
+        collection.register(DeleteCell.self, forCellWithReuseIdentifier: DeleteCell.identifier)
         return collection
     }()
-
+    
+    init(entry: Entry? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        if let entry = entry {
+            previousEntry = entry
+            fields = entry.fields!
+            date = entry.time
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.title = "Add Entry"
+        
+        loadFields()
         
         addSubviews()
         configureUI()
         addKeyboardDismissGesture()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadFields()
+        fieldsView.reloadData()
+    }
+    
+    func loadFields() {
+        if(previousEntry != nil) { return }
+        
+        let customConfigs = DataManager.shared.getCustomFields()
+        let customFields: [Field] = customConfigs.compactMap {
+            switch($0.type) {
+            case .slider:
+                guard let numConfig = $0 as? NumberConfiguration else { return nil }
+                return Field(config: $0, value: (numConfig.minValue + numConfig.maxValue) / 2)
+            case .number:
+                return Field(config: $0, value: 0)
+            case .binary:
+                return Field(config: $0, value: false)
+            default:
+                return nil
+            }
+        }
+        fields = defaultFields + customFields
+    }
+    
     func addSubviews() {
         view.addSubview(clock)
-        view.addSubview(itemsView)
+        view.addSubview(fieldsView)
     }
 
     func configureUI() {
@@ -73,21 +111,23 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         clock.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             clock.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            clock.topAnchor.constraint(equalTo: view.topAnchor),
-            clock.heightAnchor.constraint(equalToConstant: 100),
+            clock.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_LABEL_MARGIN),
+            clock.heightAnchor.constraint(equalToConstant: 20),
             clock.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
-        let _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(didTimeChange), userInfo: nil, repeats: true)
+        if date == nil {
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(didTimeChange), userInfo: nil, repeats: true)
+        }
     }
     
     func configureItems() {
-        itemsView.translatesAutoresizingMaskIntoConstraints = false
+        fieldsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            itemsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            itemsView.topAnchor.constraint(equalTo: clock.bottomAnchor),
-            itemsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            itemsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            itemsView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            fieldsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            fieldsView.topAnchor.constraint(equalTo: clock.bottomAnchor, constant: Constants.TOP_LABEL_MARGIN),
+            fieldsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            fieldsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            fieldsView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -107,32 +147,94 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func didSubmitOccur() {
-//        CoreDataManager.shared.deleteAllEntries()
-        CoreDataManager.shared.createEntry(time: Date(), fields: items)
-//        guard let entries = CoreDataManager.shared.fetchEntries() else { return }
+        // TO DO: notify submit
+        if let entry = previousEntry {
+            entry.fields = fields
+            DataManager.shared.updateEntry(entry: entry)
+            self.navigationController?.popViewController(animated: true)
+        }
+        else {
+            DataManager.shared.createEntry(time: Date(), fields: fields)
+            let alert = UIAlertController(
+                title: "",
+                message: "Mood entry was successfully created",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(
+                title: "OK",
+                style: .default,
+                handler: { _ in
+            }))
+            present(alert,
+                    animated: true,
+                    completion: nil
+            )
+        }
+    }
+    
+    
+    func didDeleteOccur() {
+        // TO DO: confirm delete
+        let alert = UIAlertController(
+            title: "Confirm deletion",
+            message: "This will delete this entry. This action is irreversible. Do you wish to proceed?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: "Delete",
+            style: .destructive,
+            handler: { _ in
+                self.didDeleteConfirmOccur()
+        }))
+        alert.addAction(UIAlertAction(
+            title: "Cancel",
+            style: .cancel,
+            handler: { _ in
+            // cancel action
+        }))
+        present(alert,
+                animated: true,
+                completion: nil
+        )
+    }
+    
+    func didDeleteConfirmOccur() {
+        if let entry = previousEntry {
+            DataManager.shared.deleteEntry(entry: entry)
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     func didChangeValue<T>(value: T, position: Int) {
-        items[position].value = value
-        print(items[position].value)
+        fields[position].value = value
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count + 1
+        if previousEntry != nil { return fields.count + 2 }
+        return fields.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item >= items.count {
-            let cell = itemsView.dequeueReusableCell(withReuseIdentifier: SubmitCell.identifier, for: indexPath) as! SubmitCell
+        if indexPath.item == fields.count {
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SubmitCell.identifier, for: indexPath) as! SubmitCell
             cell.delegate = self
             cell.contentView.layer.cornerRadius = 10
             return cell
         }
         
-        let item = items[indexPath.item]
-        if item.config.type == .slider {
+        if indexPath.item == fields.count + 1 {
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: DeleteCell.identifier, for: indexPath) as! DeleteCell
+            cell.delegate = self
+            cell.contentView.layer.cornerRadius = 10
+            return cell
+        }
+        
+        let item = fields[indexPath.item]
+        
+        switch(item.config.type) {
+        case .slider:
             let sliderConfig = item.config as! NumberConfiguration
-            let cell = itemsView.dequeueReusableCell(withReuseIdentifier: SliderCell.identifier, for: indexPath) as! SliderCell
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SliderCell.identifier, for: indexPath) as! SliderCell
             cell.delegate = self
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
@@ -144,10 +246,9 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
                 cell.initialized = true
             }
             return cell
-        }
-        else if item.config.type == .number {
+        case .number:
             let numberConfig = item.config as! NumberConfiguration
-            let cell = itemsView.dequeueReusableCell(withReuseIdentifier: NumberCell.identifier, for: indexPath) as! NumberCell
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: NumberCell.identifier, for: indexPath) as! NumberCell
             cell.delegate = self
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
@@ -161,22 +262,21 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
                 cell.initialized = true
             }
             return cell
-        }
-        else if item.config.type == .binary {
-            let cell = itemsView.dequeueReusableCell(withReuseIdentifier: BinaryCell.identifier, for: indexPath) as! BinaryCell
+        case .binary:
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: BinaryCell.identifier, for: indexPath) as! BinaryCell
             cell.delegate = self
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
             cell.itemLabel.text = item.config.label
             if(!cell.initialized) {
-                cell.value = item.value as! Bool
+                cell.value = (item.value as! NSNumber).boolValue
+//                cell.value = item.value as! Bool
                 cell.initialized = true
             }
             return cell
-        }
-        else if item.config.type == .select {
+        case .select:
             let selectConfig = item.config as! SelectConfiguration
-            let cell = itemsView.dequeueReusableCell(withReuseIdentifier: SelectCell.identifier, for: indexPath) as! SelectCell
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SelectCell.identifier, for: indexPath) as! SelectCell
             cell.delegate = self
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
@@ -189,17 +289,23 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
                 cell.initialized = true
             }
             return cell
+//        case .multiSelect:
+//            <#code#>
+//        case .txt:
+//            <#code#>
+        default:
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SubmitCell.identifier, for: indexPath) as! SubmitCell
+            cell.delegate = self
+            cell.contentView.layer.cornerRadius = 10
+            return cell
         }
-        let cell = itemsView.dequeueReusableCell(withReuseIdentifier: SubmitCell.identifier, for: indexPath) as! SubmitCell
-        cell.delegate = self
-        cell.contentView.layer.cornerRadius = 10
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item >= items.count { return CGSize(width: 200, height: 75) }
+        if indexPath.item == fields.count { return CGSize(width: 200, height: 75) } // submit cell
+        if indexPath.item == fields.count + 1 { return CGSize(width: 200, height: 50) } // delete cell
         
-        let item = items[indexPath.item]
+        let item = fields[indexPath.item]
         
         let viewWidth = view.frame.width - 40
         let submitWidth = 200

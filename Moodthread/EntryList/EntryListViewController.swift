@@ -13,16 +13,10 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
                           Field(config: NumberConfiguration(label: "Energy", type: .slider, min: 0, max: 5), value: Float(3)),
                           Field(config: ItemConfiguration(label: "Toggle", type: .binary), value: false),
                           Field(config: NumberConfiguration(label: "Number", type: .number, min: -5, max: 10000), value: 23)]
-    var entries: [[Any]] = []
+    var cells: [[Any]] = []
+    var preset: Bool = false
     
     var dismissTap = UITapGestureRecognizer()
-    lazy var label: UILabel = {
-        let label = UILabel()
-        label.text = "Entry List"
-        label.textColor = .black
-        label.textAlignment = .center
-        return label
-    }()
     
     lazy var entriesView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -38,12 +32,29 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
         collection.register(DateCell.self, forCellWithReuseIdentifier: DateCell.identifier)
         return collection
     }()
+    
+    init(entries: [Entry]? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        if let entries = entries {
+//            self.cells = entries.map( {getEntryCell(entry: $0)} )
+            cells.append(["" as Any])
+            entries.forEach { entry in
+                cells.append(getEntryCell(entry: entry))
+            }
+            preset = true
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        refreshEntries()
+        navigationItem.title = "Entry List"
         
+        refreshEntries()
         addSubviews()
         configureUI()
     }
@@ -53,30 +64,18 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func addSubviews() {
-        view.addSubview(label)
         view.addSubview(entriesView)
     }
 
     func configureUI() {
-        configureLabel()
         configureEntries()
-    }
-    
-    func configureLabel() {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.topAnchor.constraint(equalTo: view.topAnchor),
-            label.heightAnchor.constraint(equalToConstant: 100),
-            label.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
     }
     
     func configureEntries() {
         entriesView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             entriesView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            entriesView.topAnchor.constraint(equalTo: label.bottomAnchor),
+            entriesView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             entriesView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             entriesView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             entriesView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
@@ -84,51 +83,81 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func refreshEntries() {
-        let fetched = CoreDataManager.shared.fetchEntries() ?? []
-        entries = []
+        let fetched = (DataManager.shared.fetchEntries() ?? []).sorted(by: { $0.time ?? Date() > $1.time ?? Date() })
         
+        if preset {
+            fetched.forEach { cell in
+                if let match = cells.firstIndex(where: {($0[0] as? Entry)?.objectID == cell.objectID}) {
+                    cells[match] = getEntryCell(entry: cell)
+                }
+            }
+            entriesView.reloadData()
+            return
+        }
+        
+        cells = []
+
         var i = 0
         while i < fetched.count-1 {
-            // section separators go here
             let first = fetched[i]
             let second = fetched[i + 1]
-            entries.append([first, getIcons(fields: first.fields!), getText(fields: first.fields!)])
+            cells.append(getEntryCell(entry: first))
             if(!Calendar.current.isDate(first.time ?? Date(), equalTo: second.time ?? Date(), toGranularity: .day)) {
-                entries.append([second.time as Any])
-                i += 1
+                cells.append([second.time as Any])
             }
             
             i += 1
         }
+        
+        if fetched.count == 0 { return }
         let first = fetched[0]
-        entries.insert([first.time as Any], at: 0)
-        entries.append([fetched[fetched.count - 1], getIcons(fields: first.fields!), getText(fields: first.fields!)])
+        cells.insert([first.time as Any], at: 0)
+        let last = fetched[fetched.count - 1]
+        cells.append(getEntryCell(entry: last))
         
         entriesView.reloadData()
     }
     
+    func getEntryCell(entry: Entry) -> [Any] {
+        guard let fields = entry.fields else { return [entry, UIImage(), ""] }
+        
+        let tuples: [(Float, Float, Float)] = fields.compactMap { (field: Field) -> (Float, Float, Float)? in
+            guard let config = field.config as? NumberConfiguration else { return nil }
+            if(!["Mood", "Energy"].contains(config.label)) { return nil }
+            
+            return (field.extractFloat() ?? (config.maxValue + config.minValue) / 2, config.minValue, config.maxValue)
+        }
+        
+        let icons = [Appearance.getIcons(values: tuples[Constants.MOOD])[Constants.MOOD], Appearance.getIcons(values: tuples[Constants.ENERGY])[Constants.ENERGY]]
+        let text = getText(fields: fields)
+        
+        return [entry, icons, text]
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return entries.count
+        return cells.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let entry = entries[indexPath.item][0] as? Date {
+        if let date = cells[indexPath.item][0] as? Date {
             let cell = entriesView.dequeueReusableCell(withReuseIdentifier: DateCell.identifier, for: indexPath) as! DateCell
             
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "E — MMM d"
-            cell.date.text = dateFormatter.string(from: entry)
+            dateFormatter.dateFormat = "EEEE — MMM d"
+            cell.date.text = dateFormatter.string(from: date)
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
             
             return cell
         }
-        if let entry = entries[indexPath.item][0] as? Entry {
+        if let entry = cells[indexPath.item][0] as? Entry {
             let cell = entriesView.dequeueReusableCell(withReuseIdentifier: EntryCell.identifier, for: indexPath) as! EntryCell
-            guard let images = entries[indexPath.item][1] as? [UIImage] else { return cell }
-            guard let text = entries[indexPath.item][2] as? String else { return cell }
+            guard let images = cells[indexPath.item][1] as? [UIImage] else { return cell }
+            guard let text = cells[indexPath.item][2] as? String else { return cell }
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
+            cell.arrowButton.tag = cell.position
+            cell.arrowButton.addTarget(self, action: #selector(didTapArrowButton(_:)), for: .touchUpInside)
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "h:mm a"
@@ -140,57 +169,22 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
             return cell
         }
         let cell = entriesView.dequeueReusableCell(withReuseIdentifier: DateCell.identifier, for: indexPath) as! DateCell
-        print("heyyy")
 
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if entries[indexPath.item][0] is Date {
+        if cells[indexPath.item][0] is String {
+            return CGSize(width: view.frame.width - 40, height: 10)
+        }
+        if cells[indexPath.item][0] is Date {
             return CGSize(width: view.frame.width - 40, height: 50)
         }
-        if let entry = entries[indexPath.item][0] as? Entry {
+        if let entry = cells[indexPath.item][0] as? Entry {
             let summaryFieldCount = entry.fields!.suffix(from: 2).filter({ $0.isSummarizable() }).count
             return CGSize(width: Int(view.frame.width) - 40, height: 70 + (30 * summaryFieldCount))
         }
         return CGSize(width: 0, height: 0)
-    }
-    
-    func getIcons(fields: [Field]) -> [UIImage] {
-        let mood = fields[0].value as! Double
-        let energy = fields[1].value as! Double
-        
-        var images: [UIImage] = []
-        
-        switch (mood) {
-        case 0..<1:
-            images.append(UIImage(named: "fi-sr-frown") ?? UIImage())
-        case 1..<2:
-            images.append(UIImage(named: "fi-sr-face-disappointed") ?? UIImage())
-        case 2..<3:
-            images.append(UIImage(named: "fi-sr-neutral") ?? UIImage())
-        case 3..<4:
-            images.append(UIImage(named: "fi-sr-smile-beam") ?? UIImage())
-        case 4...5:
-            images.append(UIImage(named: "fi-sr-face-awesome") ?? UIImage())
-        default:
-            images.append(UIImage(named: "fi-sr-neutral") ?? UIImage())
-        }
-        
-        switch (energy) {
-        case 0..<1.5:
-            images.append(UIImage(named: "fi-sr-battery-quarter") ?? UIImage())
-        case 1.5..<3:
-            images.append(UIImage(named: "fi-sr-battery-half") ?? UIImage())
-        case 3..<4.5:
-            images.append(UIImage(named: "fi-sr-battery-three-quarters") ?? UIImage())
-        case 4.5..<5:
-            images.append(UIImage(named: "fi-sr-battery-full") ?? UIImage())
-        default:
-            images.append(UIImage(named: "fi-sr-battery-half") ?? UIImage())
-        }
-        
-        return images
     }
     
     func getText(fields: [Field]) -> String {
@@ -199,12 +193,17 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
         var text = ""
         customFields.forEach {field in
             if field.isSummarizable() {
-                text = text + "\u{2022} " + field.config.label + ": " + String(field.extractInt()) + "\n"
+                if field.config.type == .binary { text = text + "\u{2022} " + field.config.label + ": " + (field.extractBool() ?? false ? "Yes" : "No") + "\n" }
+                else { text = text + "\u{2022} " + field.config.label + ": " + String(field.extractInt() ?? 0) + "\n" }
             }
         }
         text = String(text.dropLast())
-        print(text)
         return text
+    }
+    
+    @objc func didTapArrowButton(_ sender: UIButton) {
+        guard let entry = cells[sender.tag][0] as? Entry else { return }
+        self.navigationController?.pushViewController(EntryCreationViewController(entry: entry), animated: true)
     }
 }
 

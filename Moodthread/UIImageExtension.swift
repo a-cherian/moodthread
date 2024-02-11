@@ -16,12 +16,18 @@ extension UIImage
         
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
         guard let context = UIGraphicsGetCurrentContext() else { return self }
-        context.setFillColor(UIColor.cyan.cgColor)
+        context.setFillColor(Constants.accentColor.cgColor)
         self.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
         
         let newImage: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
         
         return newImage ?? self
+    }
+    
+    func resize(targetSize: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size:targetSize).image { _ in
+            self.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 }

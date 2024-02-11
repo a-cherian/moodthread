@@ -38,12 +38,17 @@ public class Field: NSObject, NSSecureCoding {
         return config.type == .binary ||  config.type == .slider || config.type == .number
     }
     
-    public func extractDouble() -> Double {
-        return value as? Double ?? 0
+    public func extractFloat() -> Float? {
+        return value as? Float
     }
     
-    public func extractInt() -> Int {
-        return Int(value as? Double ?? 0)
+    public func extractInt() -> Int? {
+        guard let floatVal = value as? Float else { return nil }
+        return Int(floatVal)
+    }
+    
+    public func extractBool() -> Bool? {
+        return value as? Bool
     }
 }
 

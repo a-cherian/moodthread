@@ -18,10 +18,10 @@ class SelectCell: UICollectionViewCell, FieldCell/*, UICollectionViewDataSource,
     var label: String = ""
     var value: String = "" {
         didSet {
-//            trueButton.backgroundColor = value ? .cyan : .black
+//            trueButton.backgroundColor = value ? Appearance.tintColor : .black
 //            trueButton.tintColor = value ? .black : .white
 //            
-//            falseButton.backgroundColor = value ? .black : .cyan
+//            falseButton.backgroundColor = value ? .black : Appearance.tintColor
 //            falseButton.tintColor = value ? .white : .black
         }
     }
@@ -44,8 +44,7 @@ class SelectCell: UICollectionViewCell, FieldCell/*, UICollectionViewDataSource,
 //        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
 //        layout.scrollDirection = .vertical
 //        let collection = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-//        collection.backgroundColor = .cyan
-//        collection.tintColor = .cyan
+//        collection.backgroundColor = Appearance.tintColor
 //        collection.showsVerticalScrollIndicator = true
 ////        collection.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0);
 //        collection.dataSource = self

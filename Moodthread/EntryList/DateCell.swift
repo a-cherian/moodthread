@@ -15,9 +15,9 @@ class DateCell: UICollectionViewCell {
     
     lazy var date: UILabel = {
         let label = UILabel()
-        label.text = "Blank"
+        label.text = ""
         label.textColor = .black
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }()
     
@@ -44,7 +44,7 @@ class DateCell: UICollectionViewCell {
     func configureLabel() {
         date.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            date.leadingAnchor.constraint(equalTo: leadingAnchor),
+            date.centerXAnchor.constraint(equalTo: centerXAnchor),
             date.topAnchor.constraint(equalTo: topAnchor, constant: 20)
         ])
     }

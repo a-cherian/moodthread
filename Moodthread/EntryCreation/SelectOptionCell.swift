@@ -53,7 +53,6 @@ class SelectOptionCell: UICollectionViewCell {
 //            button.topAnchor.constraint(equalTo: topAnchor),
 //            button.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        print("lol")
     }
     
 }

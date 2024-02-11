@@ -35,10 +35,8 @@ class EntryCell: UICollectionViewCell {
     
     lazy var arrowButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "arrowtriangle.right.fill"), for: .normal)
-        button.tintColor = .cyan
-        
-        button.addTarget(self, action: #selector(didTapArrow), for: .touchUpInside)
+        button.setImage(UIImage(systemName: "pencil"), for: .normal)
+        button.tintColor = Appearance().tintColor
         
         return button
     }()
@@ -148,40 +146,9 @@ class EntryCell: UICollectionViewCell {
         ])
     }
     
-//    func setIcons(fields: [Field]) {
     func setIcons(icons: [UIImage]) {
         moodIconView.image = icons[0]
         energyIconView.image = icons[1]
-//        let mood = fields[0].value as! Double
-//        let energy = fields[1].value as! Double
-//        
-//        switch (mood) {
-//        case 0..<1:
-//            moodIconView.image = UIImage(named: "fi-sr-frown")
-//        case 1..<2:
-//            moodIconView.image = UIImage(named: "fi-sr-face-disappointed")
-//        case 2..<3:
-//            moodIconView.image = UIImage(named: "fi-sr-neutral")
-//        case 3..<4:
-//            moodIconView.image = UIImage(named: "fi-sr-smile-beam")
-//        case 4...5:
-//            moodIconView.image = UIImage(named: "fi-sr-face-awesome")
-//        default:
-//            moodIconView.image = UIImage(named: "fi-sr-neutral")
-//        }
-//        
-//        switch (energy) {
-//        case 0..<1.5:
-//            energyIconView.image = UIImage(named: "fi-sr-battery-quarter")
-//        case 1.5..<3:
-//            energyIconView.image = UIImage(named: "fi-sr-battery-half")
-//        case 3..<4.5:
-//            energyIconView.image = UIImage(named: "fi-sr-battery-three-quarters")
-//        case 4.5..<5:
-//            energyIconView.image = UIImage(named: "fi-sr-battery-full")
-//        default:
-//            energyIconView.image = UIImage(named: "fi-sr-battery-half")
-//        }
     }
     
 //    func setSummary(fields: [Field]) {
@@ -194,10 +161,6 @@ class EntryCell: UICollectionViewCell {
         
         summary.numberOfLines =  text.filter{ $0 == "\n" }.count + 1
         summary.text = text
-    }
-    
-    @objc func didTapArrow() {
-        print("arrow tapped")
     }
 }
 

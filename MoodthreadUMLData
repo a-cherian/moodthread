@@ -1,0 +1,44 @@
+@startuml
+class           CoreDataManager {
+    CoreDataManager shared
+    fetchEntries()
+    createEntry()
+    updateEntry()
+    deleteEntry()
+}
+class           Entry {
+   Date time
+   [Field] fields
+}
+class           Field {
+   ItemConfiguration config
+   Any value
+   extractValue()
+}
+class           ItemConfiguration {
+   String label
+   Type type
+}
+class           NumberConfiguration {
+   Float minVal
+   Float maxVal
+}
+class           SelectConfiguration {
+   [String] options
+}
+enum            Type {
+    .slider
+    .binary
+    .number
+    .txt
+    .select
+    .multiSelect
+}
+CoreDataManager -d-> Entry : stores
+Entry -> Field : contains
+Field -> ItemConfiguration : contains
+ItemConfiguration -> Type : has
+NumberConfiguration --|> ItemConfiguration 
+SelectConfiguration --|> ItemConfiguration
+hide empty members
+@enduml

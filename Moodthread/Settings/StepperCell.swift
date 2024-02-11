@@ -1,23 +1,35 @@
 //
-//  NumberCell.swift
+//  StepperCell.swift
 //  Moodthread
 //
-//  Created by AC on 10/30/23.
+//  Created by AC on 1/29/24.
 //
 
 import UIKit
 
-class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
+protocol StepperCellDelegate: AnyObject {
+    func didStepValue(value: Int, type: String)
+}
+
+class StepperCell: UITableViewCell, UITextFieldDelegate {
     
-    static let identifier = "number"
-    weak var delegate: FieldCellDelegate?
+    static let identifier = "stepper"
+    static let size: CGFloat = 50
+    
+    weak var delegate: StepperCellDelegate?
     var position = -1
+    var value = 0 {
+        didSet {
+            valueStepper.value = Double(value)
+            valueTextField.text = String(value)
+            detailTextLabel?.text = String(value)
+        }
+    }
     
-    typealias T = Int
-    var type: Type = .number
-    var label: String = ""
-    var value: Int = 0
-    var initialized: Bool = false
+    lazy var container: UIView = {
+        let view = UIView()
+        return view
+    }()
     
     lazy var itemLabel: UILabel = {
         let label = UILabel()
@@ -29,11 +41,9 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
     
     lazy var valueStepper: UIStepper = {
         let stepper = UIStepper()
-        stepper.translatesAutoresizingMaskIntoConstraints = false
-        stepper.tintColor = Appearance().tintColor
         stepper.setDecrementImage(stepper.decrementImage(for: .normal), for: .normal)
         stepper.setIncrementImage(stepper.incrementImage(for: .normal), for: .normal)
-        stepper.value = Double(value)
+        stepper.value = Double(0)
         
         stepper.addTarget(self, action: #selector(didStepperChange), for: .valueChanged)
         return stepper
@@ -46,19 +56,21 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
         textField.backgroundColor = .white
         textField.textColor = .black
         textField.textAlignment = .center
-        textField.text = String(value)
+        textField.text = String(0)
         textField.delegate = self
         
         textField.addTarget(self, action: #selector(didTextChange), for: .editingDidEnd)
         return textField
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.backgroundColor = .black
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .black
+        selectionStyle = .none
         
-        addSubviews()
-        configureUI()
+        accessoryView = valueStepper
+//        addSubviews()
+//        configureUI()
     }
     
     required init?(coder: NSCoder) {
@@ -68,12 +80,12 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
     func addSubviews() {
         contentView.addSubview(itemLabel)
         contentView.addSubview(valueStepper)
-        contentView.addSubview(valueTextField)
+//        contentView.addSubview(valueTextField)
     }
     
     func configureUI() {
         configureLabel()
-        configureTextField()
+//        configureTextField()
         configureStepper()
     }
     
@@ -91,9 +103,8 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
         valueTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             valueTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-//            valueTextField.topAnchor.constraint(equalTo: itemLabel.bottomAnchor, constant: 15),
+            valueTextField.topAnchor.constraint(equalTo: topAnchor, constant: 50),
             valueTextField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-            valueTextField.heightAnchor.constraint(equalTo: valueStepper.heightAnchor),
             valueTextField.widthAnchor.constraint(equalTo: widthAnchor, constant: -140)
         ])
     }
@@ -115,20 +126,14 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
     
     @objc func didStepperChange() {
         value = Int(valueStepper.value)
-        valueTextField.text = String(value)
-        delegate?.didChangeValue(value: value, position: position)
+//        valueTextField.text = String(value)
+        delegate?.didStepValue(value: value, type: textLabel?.text ?? "")
     }
     
     @objc func didTextChange() {
         value = Int(valueTextField.text ?? "0") ?? 0
-        valueStepper.value = Double(value)
-        delegate?.didChangeValue(value: value, position: position)
+//        valueStepper.value = Double(value)
+//        delegate?.didChangeValue(value: value, position: position)
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
 }
-
-
