@@ -8,10 +8,13 @@
 import UIKit
 
 struct StatsManager {
+    static var numberStats = ["Average", "Highest", "Lowest"]
+    static var booleanStats = ["Recorded", "Always True", "Once True"]
+    
     var data: Dictionary<[Int], [Array<Entry>.Element]>
     var fields: [ItemConfiguration]
+    var dates: [DateComponents]? = nil
     
-//    init(data: Dictionary<[Int], [Array<Entry>.Element]>) {
     init(entries: [Entry]) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy MM dd"
@@ -21,7 +24,22 @@ struct StatsManager {
         fields = extractFields(entries: entries)
     }
     
-    func getStatsOptions() -> [(String, String)] {
+    init(entries: [Entry], dates: [DateComponents]) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy MM dd"
+        let visibleDates: Dictionary<String, DateComponents> = dates.reduce(into: [String:DateComponents]()) {
+            $0[dateFormatter.string(from: Calendar.current.date(from: $1) ?? Date())] = $1
+        }
+        let filteredEntries = entries.filter { visibleDates[dateFormatter.string(from: $0.time ?? Date())] != nil }
+        
+        self.data = Dictionary(grouping: filteredEntries) { dateFormatter.string(from: $0.time ?? Date()).split(separator: " ").map { Int($0) ?? 0 } }
+        self.dates = dates
+        
+        fields = []
+        fields = extractFields(entries: entries)
+    }
+    
+    func getStatsOptions(statFilter: [String]? = nil) -> [(String, String)] {
         let options = getStatsOptions(for: Array(data.keys)).flatMap { $0 }
         
         var uniqueOptions = [(String, String)]()
@@ -31,11 +49,30 @@ struct StatsManager {
             }
         }
         
-        return uniqueOptions
+        guard let statFilter = statFilter else { return uniqueOptions }
+        return uniqueOptions.compactMap { statFilter.contains($0.1) ? $0 : nil }
+    }
+    
+    func getNumberStats(for stat: (String, String)) -> [(date: Date, v: Float, min: Float, max: Float)] {
+        let stats: [(Date, Float, Float, Float)] = dates?.compactMap {
+            guard let stat = getNumberStats(date: $0, for: stat) else { return nil }
+            guard let date = Calendar.current.date(from: $0) else { return nil }
+            return (date, stat.v, stat.min, stat.max)
+        } ?? []
+        return stats
+    }
+    
+    func getBooleanStats(for stat: (String, String)) -> [(date: Date, v: Bool)] {
+        let stats: [(Date, Bool)] = dates?.compactMap {
+            guard let stat = getBooleanStats(date: $0, for: stat) else { return nil }
+            guard let date: Date = Calendar.current.date(from: $0) else { return nil }
+            return (date, stat)
+        } ?? []
+        return stats
     }
     
     func getNumberStats(date: DateComponents, for stat: (String, String)) -> (v: Float, min: Float, max: Float)? {
-        if(!["Average", "Highest", "Lowest"].contains(stat.1)) { return nil }
+        if(!StatsManager.numberStats.contains(stat.1)) { return nil }
         let dateArray: [Int] = [date.year ?? 0, date.month ?? 0, date.day ?? 0]
         let dayEntries: [Entry] = data[dateArray] ?? []
         
@@ -44,8 +81,8 @@ struct StatsManager {
             return config
         }
         
-        let options = getStatsOptions(for: [dateArray])[0]
-        if !options.contains(where: {$0.0 == stat.0 && $0.1 == stat.1}) || dayEntries.count == 0 { return nil }
+        let options = getStatsOptions(for: [dateArray])
+        if options.count != 0 && !options[0].contains(where: {$0.0 == stat.0 && $0.1 == stat.1}) || dayEntries.count == 0 { return nil }
         
         let values: [Float] = dayEntries.flatMap {
             $0.fields?.compactMap {
@@ -66,10 +103,11 @@ struct StatsManager {
         return nil
     }
     
-    func getBooleanStats(date: DateComponents, for stat: (String, String)) -> Bool {
-        if(!["Recorded", "Always True", "Once True"].contains(stat.1)) { return false }
+    func getBooleanStats(date: DateComponents, for stat: (String, String)) -> Bool? {
+        if(!StatsManager.booleanStats.contains(stat.1)) { return nil }
         let dateArray: [Int] = [date.year ?? 0, date.month ?? 0, date.day ?? 0]
         let dayEntries: [Entry] = data[dateArray] ?? []
+        if dayEntries.count == 0 { return nil }
         
         if stat.1 == "Recorded" {
             let values: [Bool] = dayEntries.flatMap {
@@ -99,7 +137,7 @@ struct StatsManager {
             return values.contains(true) && values.count > 0
         }
         
-        return false
+        return nil
     }
     
     private func getStatsOptions(for dates: [[Int]]) -> [[(String, String)]] {

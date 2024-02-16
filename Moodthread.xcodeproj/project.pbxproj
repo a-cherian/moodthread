@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		400421802B7F05860030234D /* VerticalAlignmentExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4004217F2B7F05850030234D /* VerticalAlignmentExtension.swift */; };
+		400421832B7F43820030234D /* HorizontalBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400421822B7F43820030234D /* HorizontalBarView.swift */; };
+		4018ECFF2B7CAE8D0065285D /* MonthYearWheelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018ECFE2B7CAE8D0065285D /* MonthYearWheelPicker.swift */; };
+		4018ED012B7CC2130065285D /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018ED002B7CC2130065285D /* LineChartView.swift */; };
+		401B885E2B7B470E005F59E9 /* MonthYearWheelPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 401B885D2B7B470E005F59E9 /* MonthYearWheelPicker */; };
 		405946482B2D1A6E00A6B1F9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405946472B2D1A6E00A6B1F9 /* Constants.swift */; };
 		406C762A2B6489C40094A78E /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C76292B6489C40094A78E /* Appearance.swift */; };
 		406C762C2B64A62A0094A78E /* CustomFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C762B2B64A62A0094A78E /* CustomFieldViewController.swift */; };
@@ -70,6 +75,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4004217F2B7F05850030234D /* VerticalAlignmentExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalAlignmentExtension.swift; sourceTree = "<group>"; };
+		400421822B7F43820030234D /* HorizontalBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalBarView.swift; sourceTree = "<group>"; };
+		4018ECFE2B7CAE8D0065285D /* MonthYearWheelPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthYearWheelPicker.swift; sourceTree = "<group>"; };
+		4018ED002B7CC2130065285D /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
 		405946472B2D1A6E00A6B1F9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		406C76292B6489C40094A78E /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		406C762B2B64A62A0094A78E /* CustomFieldViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFieldViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				401B885E2B7B470E005F59E9 /* MonthYearWheelPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +154,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		400421812B7F059E0030234D /* External */ = {
+			isa = PBXGroup;
+			children = (
+				4004217F2B7F05850030234D /* VerticalAlignmentExtension.swift */,
+				40B9B3482B229D740016E3CA /* UIImageExtension.swift */,
+				406C76382B674C570094A78E /* NSLayoutConstraintExtension.swift */,
+				4018ECFE2B7CAE8D0065285D /* MonthYearWheelPicker.swift */,
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
 		40A2071E2AD1064900DCF23A = {
 			isa = PBXGroup;
 			children = (
@@ -183,12 +204,11 @@
 				40C07E592AE39B82002B63C8 /* Calendar */,
 				40C07E5B2AE39B90002B63C8 /* Stats */,
 				40C07E5C2AE39BAB002B63C8 /* Settings */,
+				400421812B7F059E0030234D /* External */,
 				40A207362AD1064D00DCF23A /* Assets.xcassets */,
 				40A207382AD1064D00DCF23A /* LaunchScreen.storyboard */,
 				40A2073B2AD1064D00DCF23A /* Info.plist */,
 				40A207332AD1064900DCF23A /* Moodthread.xcdatamodeld */,
-				40B9B3482B229D740016E3CA /* UIImageExtension.swift */,
-				406C76382B674C570094A78E /* NSLayoutConstraintExtension.swift */,
 			);
 			path = Moodthread;
 			sourceTree = "<group>";
@@ -248,6 +268,8 @@
 			isa = PBXGroup;
 			children = (
 				40C07E4C2AE347C1002B63C8 /* StatsViewController.swift */,
+				4018ED002B7CC2130065285D /* LineChartView.swift */,
+				400421822B7F43820030234D /* HorizontalBarView.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -285,6 +307,9 @@
 			dependencies = (
 			);
 			name = Moodthread;
+			packageProductDependencies = (
+				401B885D2B7B470E005F59E9 /* MonthYearWheelPicker */,
+			);
 			productName = Moodthread;
 			productReference = 40A207272AD1064900DCF23A /* Moodthread.app */;
 			productType = "com.apple.product-type.application";
@@ -357,6 +382,9 @@
 				Base,
 			);
 			mainGroup = 40A2071E2AD1064900DCF23A;
+			packageReferences = (
+				401B885C2B7B470E005F59E9 /* XCRemoteSwiftPackageReference "MonthYearWheelPicker" */,
+			);
 			productRefGroup = 40A207282AD1064900DCF23A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -402,6 +430,7 @@
 				40C07E512AE3591E002B63C8 /* FieldCell.swift in Sources */,
 				40F05FCC2B5DFF4500B69CE8 /* StatsManager.swift in Sources */,
 				40A2072F2AD1064900DCF23A /* EntryCreationViewController.swift in Sources */,
+				400421802B7F05860030234D /* VerticalAlignmentExtension.swift in Sources */,
 				40C581D62AF0D7C6002ED441 /* NumberCell.swift in Sources */,
 				40C07E602AE3A9D8002B63C8 /* ItemConfiguration.swift in Sources */,
 				406C76392B674C570094A78E /* NSLayoutConstraintExtension.swift in Sources */,
@@ -422,6 +451,8 @@
 				40C656072AF327A8006FD725 /* Field.swift in Sources */,
 				40A207352AD1064900DCF23A /* Moodthread.xcdatamodeld in Sources */,
 				40C07E4B2AE34799002B63C8 /* EntryListViewController.swift in Sources */,
+				4018ED012B7CC2130065285D /* LineChartView.swift in Sources */,
+				4018ECFF2B7CAE8D0065285D /* MonthYearWheelPicker.swift in Sources */,
 				406C762E2B64A8B40094A78E /* CustomFieldCell.swift in Sources */,
 				40C07E5E2AE3A4FF002B63C8 /* SliderCell.swift in Sources */,
 				406C76332B673C260094A78E /* DynamicTableView.swift in Sources */,
@@ -436,6 +467,7 @@
 				40C656092AF39CA1006FD725 /* CoreDataManager.swift in Sources */,
 				40C07E642AE3BF37002B63C8 /* SubmitCell.swift in Sources */,
 				406C76302B64B8490094A78E /* SettingsTableViewController.swift in Sources */,
+				400421832B7F43820030234D /* HorizontalBarView.swift in Sources */,
 				40B9B3492B229D740016E3CA /* UIImageExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -775,6 +807,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		401B885C2B7B470E005F59E9 /* XCRemoteSwiftPackageReference "MonthYearWheelPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bendodson/MonthYearWheelPicker.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		401B885D2B7B470E005F59E9 /* MonthYearWheelPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 401B885C2B7B470E005F59E9 /* XCRemoteSwiftPackageReference "MonthYearWheelPicker" */;
+			productName = MonthYearWheelPicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		40A207332AD1064900DCF23A /* Moodthread.xcdatamodeld */ = {

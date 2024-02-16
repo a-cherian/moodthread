@@ -70,7 +70,7 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
         fieldSelector.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             fieldSelector.centerXAnchor.constraint(equalTo: calendarView.centerXAnchor),
-            fieldSelector.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_LABEL_MARGIN),
+            fieldSelector.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
             fieldSelector.heightAnchor.constraint(equalToConstant: 20),
             fieldSelector.widthAnchor.constraint(equalTo: calendarView.widthAnchor)
         ])
@@ -83,24 +83,26 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
         calendarView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             calendarView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            calendarView.topAnchor.constraint(equalTo: fieldSelector.bottomAnchor, constant: Constants.TOP_LABEL_MARGIN),
-            calendarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            calendarView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50)
+            calendarView.topAnchor.constraint(equalTo: fieldSelector.bottomAnchor, constant: Constants.TOP_MARGIN),
+            calendarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.BOTTOM_MARGIN),
+            calendarView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: Constants.WIDTH_MARGIN)
         ])
     }
     
     func refreshEntries() {
-        let fetched = (DataManager.shared.fetchEntries() ?? []).sorted(by: { $0.time ?? Date() > $1.time ?? Date() })
+        let fetched = DataManager.shared.fetchEntries()
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy MM dd"
-        let dateComponents = getDateComponents()
-        let visibleDates: Dictionary<String, DateComponents> = dateComponents.reduce(into: [String:DateComponents]()) {
-            $0[dateFormatter.string(from: Calendar.current.date(from: $1) ?? Date())] = $1
-        }
-        let filteredEntries = fetched.filter { visibleDates[dateFormatter.string(from: $0.time ?? Date())] != nil }
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy MM dd"
+//        let dateComponents = getDateComponents()
+//        let visibleDates: Dictionary<String, DateComponents> = dateComponents.reduce(into: [String:DateComponents]()) {
+//            $0[dateFormatter.string(from: Calendar.current.date(from: $1) ?? Date())] = $1
+//        }
+//        let filteredEntries = fetched.filter { visibleDates[dateFormatter.string(from: $0.time ?? Date())] != nil }
+//        
+//        statsManager = StatsManager(entries: filteredEntries)
         
-        statsManager = StatsManager(entries: filteredEntries)
+        statsManager = StatsManager(entries: fetched, dates: getDateComponents())
         
         var actionItems: [UIAction] = []
         let options = statsManager.getStatsOptions()
@@ -115,23 +117,6 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
         fieldSelector.menu = UIMenu(title: "", options: .displayInline, children: actionItems)
         
         refreshCalendar()
-    }
-    
-    func getColor(values: (v: Float, min: Float, max: Float)?) -> UIColor {
-        guard let values = values else { return .gray }
-        
-        let range = values.max - values.min
-        
-        switch (values.v) {
-        case values.min..<(values.min + range/3):
-            return .red
-        case (values.min + range/3)..<(values.min + range * 2/3):
-            return .yellow
-        case (values.min + range * 2/3)...values.max:
-            return .green
-        default:
-            return .gray
-        }
     }
     
     func refreshCalendar() {
@@ -156,7 +141,7 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
         let tintColor = Appearance().tintColor
         
         switch(currentOption.1) {
-        case "Average", "Highest", "Lowest":
+        case _ where StatsManager.numberStats.contains(currentOption.1):
             guard let values = statsManager.getNumberStats(date: dateComponents, for: currentOption) else { return .default() }
             let icons = Appearance.getIcons(values: values)
             var icon = icons[2]
@@ -166,13 +151,13 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
             else if(icon == nil) { return .default(color: tintColor) }
             else { return formatTextDecoration(value: values.v) }
             
-            return formatIconDecoration(icon: icon, color: self.getColor(values: values))
+            return formatIconDecoration(icon: icon, color: Appearance.getColor(values: values))
         case "Recorded":
-            let value = statsManager.getBooleanStats(date: dateComponents, for: currentOption)
+            let value = statsManager.getBooleanStats(date: dateComponents, for: currentOption) ?? false
             if !value { return .default(color: tintColor) }
             return formatIconDecoration(icon: UIImage(systemName: "doc.text"), color: tintColor)
         case "Always True", "Once True":
-            let value = statsManager.getBooleanStats(date: dateComponents, for: currentOption)
+            let value = statsManager.getBooleanStats(date: dateComponents, for: currentOption) ?? false
             return formatIconDecoration(icon: value ? UIImage(systemName: "checkmark") : UIImage(systemName: "xmark"), color: value ? .green : .red)
         default:
             return .default(color: tintColor)

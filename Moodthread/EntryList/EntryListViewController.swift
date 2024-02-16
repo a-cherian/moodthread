@@ -83,7 +83,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func refreshEntries() {
-        let fetched = (DataManager.shared.fetchEntries() ?? []).sorted(by: { $0.time ?? Date() > $1.time ?? Date() })
+        let fetched = DataManager.shared.fetchEntries()
         
         if preset {
             fetched.forEach { cell in

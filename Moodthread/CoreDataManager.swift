@@ -41,19 +41,19 @@ struct DataManager {
         return nil
     }
     
-    func fetchEntries() -> [Entry]? {
+    func fetchEntries() -> [Entry] {
         let context = persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<Entry>(entityName: "Entry")
         
         do {
             let entries = try context.fetch(fetchRequest)
-            return entries
+            return entries.sorted(by: { $0.time ?? Date() > $1.time ?? Date() })
         } catch let fetchError {
             print("Failed to fetch: \(fetchError)")
         }
         
-        return nil
+        return []
     }
     
     func updateEntry(entry: Entry) {

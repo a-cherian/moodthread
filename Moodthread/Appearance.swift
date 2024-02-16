@@ -28,8 +28,7 @@ struct Appearance {
         guard let scene = (UIApplication.shared.connectedScenes.first as? UIWindowScene), let window = scene.windows.first else {
             return Constants.accentColor
         }
-        print(window.tintColor)
-        return window.tintColor
+        return window.tintColor ?? Constants.accentColor
     }()
     
     static func getIcons(values: (v: Float, min: Float, max: Float)?) -> [UIImage?] {
@@ -90,5 +89,22 @@ struct Appearance {
         }
         
         return images
+    }
+    
+    static func getColor(values: (v: Float, min: Float, max: Float)?) -> UIColor {
+        guard let values = values else { return .gray }
+        
+        let range = values.max - values.min
+        
+        switch (values.v) {
+        case values.min..<(values.min + range/3):
+            return .red
+        case (values.min + range/3)..<(values.min + range * 2/3):
+            return .yellow
+        case (values.min + range * 2/3)...values.max:
+            return .green
+        default:
+            return .gray
+        }
     }
 }

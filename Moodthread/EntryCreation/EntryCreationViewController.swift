@@ -111,7 +111,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         clock.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             clock.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            clock.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_LABEL_MARGIN),
+            clock.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
             clock.heightAnchor.constraint(equalToConstant: 20),
             clock.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
@@ -124,7 +124,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         fieldsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             fieldsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            fieldsView.topAnchor.constraint(equalTo: clock.bottomAnchor, constant: Constants.TOP_LABEL_MARGIN),
+            fieldsView.topAnchor.constraint(equalTo: clock.bottomAnchor, constant: Constants.TOP_MARGIN),
             fieldsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             fieldsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             fieldsView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
