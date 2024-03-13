@@ -47,7 +47,7 @@ struct Appearance {
         
         
         switch (values.v) {
-        case 0..<1:
+        case ..<1:
             images.append(UIImage(named: MOOD_LOWEST)?.withRenderingMode(.alwaysTemplate))
         case 1..<2:
             images.append(UIImage(named: MOOD_MID_LOW)?.withRenderingMode(.alwaysTemplate))
@@ -55,20 +55,20 @@ struct Appearance {
             images.append(UIImage(named: MOOD_MID)?.withRenderingMode(.alwaysTemplate))
         case 3..<4:
             images.append(UIImage(named: MOOD_MID_HIGH)?.withRenderingMode(.alwaysTemplate))
-        case 4...5:
+        case 4...:
             images.append(UIImage(named: MOOD_HIGHEST)?.withRenderingMode(.alwaysTemplate))
         default:
             images.append(nil)
         }
         
         switch (values.v) {
-        case 0..<1.25:
+        case ..<1.25:
             images.append(UIImage(named: ENERGY_25)?.withRenderingMode(.alwaysTemplate))
         case 1.25..<2.5:
             images.append(UIImage(named: ENERGY_50)?.withRenderingMode(.alwaysTemplate))
         case 2.5..<3.75:
             images.append(UIImage(named: ENERGY_75)?.withRenderingMode(.alwaysTemplate))
-        case 3.75...5:
+        case 3.75...:
             images.append(UIImage(named: ENERGY_100)?.withRenderingMode(.alwaysTemplate))
         default:
             images.append(nil)

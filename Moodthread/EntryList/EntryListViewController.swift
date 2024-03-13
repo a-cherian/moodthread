@@ -152,8 +152,8 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
         }
         if let entry = cells[indexPath.item][0] as? Entry {
             let cell = entriesView.dequeueReusableCell(withReuseIdentifier: EntryCell.identifier, for: indexPath) as! EntryCell
-            guard let images = cells[indexPath.item][1] as? [UIImage] else { return cell }
-            guard let text = cells[indexPath.item][2] as? String else { return cell }
+            guard let images = cells[indexPath.item][1] as? [UIImage?] else { print("hiiiii"); print(cells[indexPath.item]); return cell }
+            guard let text = cells[indexPath.item][2] as? String else { print("hi"); return cell }
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
             cell.arrowButton.tag = cell.position

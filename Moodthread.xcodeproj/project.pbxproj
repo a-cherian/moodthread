@@ -50,7 +50,7 @@
 		40C581D82AF0E938002ED441 /* SelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C581D72AF0E938002ED441 /* SelectCell.swift */; };
 		40C60D912AF23C4D0061312B /* SelectOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C60D902AF23C4D0061312B /* SelectOptionCell.swift */; };
 		40C656072AF327A8006FD725 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C656062AF327A8006FD725 /* Field.swift */; };
-		40C656092AF39CA1006FD725 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C656082AF39CA1006FD725 /* CoreDataManager.swift */; };
+		40C656092AF39CA1006FD725 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C656082AF39CA1006FD725 /* DataManager.swift */; };
 		40C6560B2AF3ABAC006FD725 /* Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C6560A2AF3ABAC006FD725 /* Fields.swift */; };
 		40E753CE2B74755600266936 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E753CD2B74755600266936 /* LabelCell.swift */; };
 		40E753D02B747D4F00266936 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E753CF2B747D4F00266936 /* ActionCell.swift */; };
@@ -121,7 +121,7 @@
 		40C581D72AF0E938002ED441 /* SelectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCell.swift; sourceTree = "<group>"; };
 		40C60D902AF23C4D0061312B /* SelectOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOptionCell.swift; sourceTree = "<group>"; };
 		40C656062AF327A8006FD725 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
-		40C656082AF39CA1006FD725 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		40C656082AF39CA1006FD725 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		40C6560A2AF3ABAC006FD725 /* Fields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fields.swift; sourceTree = "<group>"; };
 		40E753CD2B74755600266936 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		40E753CF2B747D4F00266936 /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 				405946472B2D1A6E00A6B1F9 /* Constants.swift */,
 				40A2072A2AD1064900DCF23A /* AppDelegate.swift */,
 				40A2072C2AD1064900DCF23A /* SceneDelegate.swift */,
-				40C656082AF39CA1006FD725 /* CoreDataManager.swift */,
+				40C656082AF39CA1006FD725 /* DataManager.swift */,
 				40C07E462AE3452E002B63C8 /* TabBarController.swift */,
 				406C76362B6742C70094A78E /* Type.swift */,
 				40C6560A2AF3ABAC006FD725 /* Fields.swift */,
@@ -464,7 +464,7 @@
 				406C76352B673D190094A78E /* PickerCell.swift in Sources */,
 				40E753CE2B74755600266936 /* LabelCell.swift in Sources */,
 				40C6560B2AF3ABAC006FD725 /* Fields.swift in Sources */,
-				40C656092AF39CA1006FD725 /* CoreDataManager.swift in Sources */,
+				40C656092AF39CA1006FD725 /* DataManager.swift in Sources */,
 				40C07E642AE3BF37002B63C8 /* SubmitCell.swift in Sources */,
 				406C76302B64B8490094A78E /* SettingsTableViewController.swift in Sources */,
 				400421832B7F43820030234D /* HorizontalBarView.swift in Sources */,

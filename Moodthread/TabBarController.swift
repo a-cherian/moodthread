@@ -37,7 +37,8 @@ class TabBarController: UITabBarController {
         stats.tabBarItem.title = "Statistics"
         let statsNav = UINavigationController(rootViewController: stats)
         
-        let settings = SettingsViewController()
+//        let settings = SettingsViewController()
+        let settings = CustomFieldViewController()
         settings.tabBarItem.image = UIImage(systemName: "gearshape.fill")
         settings.tabBarItem.title = "Settings"
         let settingsNav = UINavigationController(rootViewController: settings)

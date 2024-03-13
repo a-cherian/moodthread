@@ -146,7 +146,7 @@ class EntryCell: UICollectionViewCell {
         ])
     }
     
-    func setIcons(icons: [UIImage]) {
+    func setIcons(icons: [UIImage?]) {
         moodIconView.image = icons[0]
         energyIconView.image = icons[1]
     }

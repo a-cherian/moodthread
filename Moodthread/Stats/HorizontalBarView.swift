@@ -22,15 +22,7 @@ struct HorizontalBarView: View {
     
     var field: String = ""
     
-    var datasets: [BoolData] = [] /*Dataset(field: "", stat: "", data: []) {
-        return stats.compactMap { stat in
-//            if(!StatsManager.booleanStats.contains(stat)) { return nil }
-            let data = statsManager.getBooleanStats(for: (field, stat)).map{ $0.v }
-            let trueCount = data.filter { $0 }.count
-            let falseCount = data.count - trueCount
-            return BoolData(trueCount: trueCount, falseCount: falseCount)
-        }
-    }*/
+    var datasets: [BoolData] = []
     
     init(statsManager: StatsManager, field: String) {
         let statsOptions = statsManager.getStatsOptions(statFilter: StatsManager.booleanStats)
