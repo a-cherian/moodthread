@@ -36,7 +36,7 @@ struct StatsManager {
         self.dates = dates
         
         fields = []
-        fields = extractFields(entries: entries)
+        fields = extractFields(entries: filteredEntries)
     }
     
     func getStatsOptions(statFilter: [String]? = nil) -> [(String, String)] {

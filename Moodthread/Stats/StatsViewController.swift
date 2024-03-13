@@ -9,7 +9,6 @@ import UIKit
 import SwiftUI
 
 class StatsViewController: UIViewController, UIPopoverPresentationControllerDelegate {
-    
     var statsManager: StatsManager = StatsManager(entries: [])
     var currentMonth = Calendar.current.dateComponents([.day, .month, .year], from: Date()) {
         didSet {
@@ -19,6 +18,7 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
             self.refreshEntries()
         }
     }
+    var compareController: UIHostingController<LineChartView>? = nil
 
     var monthSelector: UIButton = {
         let button = UIButton()
@@ -52,7 +52,10 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 10
-        stack.distribution = .fill
+        stack.distribution = .fillProportionally
+//        stack.layoutMargins = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
         return stack
     }()
     
@@ -169,23 +172,47 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
     }
     
     func refreshCharts() {
+        chartStack.subviews.forEach {
+            chartStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+        
+        if(statsManager.data.count == 0) {
+            let emptyLabel = UILabel()
+            if let descriptor = emptyLabel.font.fontDescriptor.withSymbolicTraits(UIFontDescriptor.SymbolicTraits([.traitItalic])) {
+                emptyLabel.font = UIFont(descriptor: descriptor, size: 18)
+            }
+            emptyLabel.text = "No data for this period of time."
+            emptyLabel.textColor = .gray
+            emptyLabel.textAlignment = .center
+            chartStack.addArrangedSubview(emptyLabel)
+            return
+        }
+        
         let options = statsManager.getStatsOptions()
         
-        chartStack.subviews.forEach { chartStack.removeArrangedSubview($0) }
+        let moodController = UIHostingController(rootView: LineChartView(statsManager: statsManager, fixedField: "Mood"))
+        moodController.sizingOptions = .intrinsicContentSize
+        chartStack.addArrangedSubview(moodController.view)
         
-        chartStack.addArrangedSubview(UIHostingController(rootView: LineChartView(statsManager: statsManager, fixedField: "Mood")).view)
-        chartStack.addArrangedSubview(UIHostingController(rootView: LineChartView(statsManager: statsManager, fixedField: "Energy")).view)
+        let energyController = UIHostingController(rootView: LineChartView(statsManager: statsManager, fixedField: "Energy"))
+        energyController.sizingOptions = .intrinsicContentSize
+        chartStack.addArrangedSubview(energyController.view)
         
         var visitedBool: [String] = []
         options.forEach { option in
             if(!StatsManager.booleanStats.contains(option.1)) { return }
             if(visitedBool.contains(option.0)) { return }
-            
             visitedBool.append(option.0)
-            chartStack.addArrangedSubview(UIHostingController(rootView: HorizontalBarView(statsManager: statsManager, field: option.0)).view)
+            
+            let boolController = UIHostingController(rootView: HorizontalBarView(statsManager: statsManager, field: option.0))
+            boolController.sizingOptions = .intrinsicContentSize
+            chartStack.addArrangedSubview(boolController.view)
         }
         
-        chartStack.addArrangedSubview(UIHostingController(rootView: LineChartView(statsManager: statsManager)).view)
+        compareController = UIHostingController(rootView: LineChartView(statsManager: statsManager))
+        compareController?.sizingOptions = .intrinsicContentSize
+        chartStack.addArrangedSubview(compareController?.view ?? UIView())
         
         chartStack.subviews.forEach {
             $0.layer.cornerRadius = 10
@@ -201,6 +228,17 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
             if(copy.isValidDate(in: Calendar.current)) { dateComponents.append(copy) }
         }
         return dateComponents
+    }
+    
+    func didUpdate() {
+//        let oldView = compareController?.rootView
+//        compareController = UIHostingController(rootView: oldView ?? LineChartView(statsManager: statsManager, delegate: self))
+//        compareController?.sizingOptions = .intrinsicContentSize
+//        chartStack.addArrangedSubview(compareController?.view ?? UIView())
+//        print("hi")
+//        compareController.view?.setNeedsLayout()
+//        compareController.view?.layoutIfNeeded()
+//        compareController.view?.invalidateIntrinsicContentSize()
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {

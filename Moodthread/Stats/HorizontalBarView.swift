@@ -49,7 +49,8 @@ struct HorizontalBarView: View {
         }
         .chartForegroundStyleScale(
             domain: ["True", "False"],
-            range: [.green, .red]
+            range: [Color(uiColor: UIColor(red: 97 / 255, green: 214 / 255, blue: 94 / 255, alpha: 1)),
+                    Color(uiColor: UIColor(red: 243 / 255, green: 81 / 255, blue: 78 / 255, alpha: 1))]
         )
         .chartXAxis {}
         .chartYAxis {

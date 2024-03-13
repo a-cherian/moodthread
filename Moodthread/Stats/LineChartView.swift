@@ -14,6 +14,9 @@ struct Dataset: Identifiable {
     let field: String
     let stat: String
     let data: [DataPoint]
+    var fieldText: String {
+        return (field.count < 8 ? field : field.prefix(5) + "...") + " " + stat
+    }
 }
 
 struct DataPoint: Identifiable {
@@ -112,9 +115,10 @@ struct LineChartView: View {
     
     var body: some View {
         if(fixedField == nil) {
-//            Text("Custom Comparison Chart")
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
+            Text("Trend Comparison")
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
+
             VStack(spacing: 10) {
                 if(option1.active) {
                     HStack {
@@ -137,7 +141,7 @@ struct LineChartView: View {
                         HidableButton(hideIf: true, img: "plus", action: { option2.active = true })
                         HidableButton(hideIf: option2.active, img: "plus", action: { option2.active = true })
                     }
-                    .frame(maxHeight: 30)
+                    .frame(maxHeight: 40)
                 }
                 
                 if(option2.active) {
@@ -189,7 +193,6 @@ struct LineChartView: View {
                     .frame(maxHeight: 30)
                 }
             }
-            .frame(minHeight: 120)
         }
             
         else {
@@ -210,19 +213,21 @@ struct LineChartView: View {
         
         Chart(datasets) { dataset in
             ForEach(Array(dataset.data.enumerated()), id: \.offset) { index, point in
-                let fieldText = (dataset.field.count < 8 ? dataset.field : dataset.field.prefix(5) + "...") + " " + dataset.stat
                 LineMark(
                     x: .value("Day", point.date),
                     y: .value("Value", point.num)
                 )
-                .foregroundStyle(by: .value("Stat", fieldText))
+//                .foregroundStyle(by: .value("Stat", index))
+                .foregroundStyle(by: .value("Stat", dataset.fieldText))
                 PointMark(
                     x: .value("Day", point.date),
                     y: .value("Value", point.num)
                 )
-                .foregroundStyle(by: .value("Stat", fieldText))
+//                .foregroundStyle(by: .value("Stat", index))
+                .foregroundStyle(by: .value("Stat", dataset.fieldText))
             }
         }
+        .chartForegroundStyleScale(getColors())
         .chartXScale(domain: minDate...maxDate)
         .chartXAxis {
             AxisMarks(values: .automatic) { date in
@@ -249,5 +254,16 @@ struct LineChartView: View {
         .opacity(shown ? 1 : 0) // Make it invisibile
         .allowsHitTesting(shown) // Disable user interaction
         return button
+    }
+    
+    func getColors() -> KeyValuePairs<String, Color> {
+        let fullColors: [Color] = [Color(uiColor: UIColor(red: 98 / 255, green: 188 / 255, blue: 150 / 255, alpha: 1)),
+                                   Color(uiColor: UIColor(red: 150 / 255, green: 127 / 255, blue: 160 / 255, alpha: 1)),
+                                   Color(uiColor: UIColor(red: 226 / 255, green: 160 / 255, blue: 140 / 255, alpha: 1))]
+        
+        if(datasets.count == 0) { return [:] }
+        if(datasets.count == 1) { return [datasets[0].fieldText : fullColors[0]] }
+        if(datasets.count == 2) { return [datasets[0].fieldText : fullColors[0], datasets[1].fieldText : fullColors[1]] }
+        return [datasets[0].fieldText : fullColors[0], datasets[1].fieldText : fullColors[1], datasets[2].fieldText : fullColors[2]]
     }
 }
