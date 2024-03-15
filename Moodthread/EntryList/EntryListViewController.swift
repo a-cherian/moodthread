@@ -55,7 +55,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        navigationItem.title = "Entry List"
+        navigationItem.title = "Your Moodthread"
         
         refreshEntries()
         addSubviews()
@@ -87,6 +87,12 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func refreshEntries() {
         let fetched = DataManager.shared.fetchEntries()
+        
+        if(fetched.count == 0) {
+            cells = [["No entries to display."], [""], ["Add an entry to start tracking"], ["your Moodthread!"]]
+            entriesView.reloadData()
+            return
+        }
         
         if preset {
             fetched.forEach { cell in
@@ -172,7 +178,9 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
             
             return cell
         }
+        
         let cell = entriesView.dequeueReusableCell(withReuseIdentifier: DateCell.identifier, for: indexPath) as! DateCell
+        cell.date.text = cells[indexPath.item][0] as? String ?? ""
 
         return cell
     }
@@ -185,7 +193,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
             return CGSize(width: view.frame.width - 40, height: 50)
         }
         if let entry = cells[indexPath.item][0] as? Entry {
-            let summaryFieldCount = entry.fields!.suffix(from: 2).filter({ $0.isSummarizable() }).count
+            let summaryFieldCount = entry.fields?.suffix(from: 2).filter({ $0.isSummarizable() && $0.enabled }).count ?? 0
             return CGSize(width: Int(view.frame.width) - 40, height: 70 + (30 * summaryFieldCount))
         }
         return CGSize(width: 0, height: 0)
@@ -196,7 +204,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
         
         var text = ""
         customFields.forEach {field in
-            if field.isSummarizable() {
+            if field.isSummarizable() && field.enabled {
                 if field.config.type == .binary { text = text + "\u{2022} " + field.config.label + ": " + (field.extractBool() ?? false ? "Yes" : "No") + "\n" }
                 else { text = text + "\u{2022} " + field.config.label + ": " + String(field.extractInt() ?? 0) + "\n" }
             }

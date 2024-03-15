@@ -24,7 +24,7 @@ class TabBarController: UITabBarController {
         
         let entryList = EntryListViewController()
         entryList.tabBarItem.image = UIImage(systemName: "line.3.horizontal")
-        entryList.tabBarItem.title = "Entry List"
+        entryList.tabBarItem.title = "Moodthread"
         let entryListNav = UINavigationController(rootViewController: entryList)
         
         let entryCreation = EntryCreationViewController()

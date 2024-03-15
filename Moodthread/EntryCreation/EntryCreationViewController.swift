@@ -209,6 +209,10 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         fields[position].value = value
     }
     
+    func didToggle(enabled: Bool, position: Int) {
+        fields[position].enabled = enabled
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if previousEntry != nil { return fields.count + 2 }
         return fields.count + 1
@@ -237,6 +241,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
             let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SliderCell.identifier, for: indexPath) as! SliderCell
             cell.delegate = self
             cell.position = indexPath.item
+            cell.enabled = item.enabled
             cell.contentView.layer.cornerRadius = 10
             cell.itemLabel.text = sliderConfig.label
             if(!cell.initialized) {
@@ -251,6 +256,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
             let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: NumberCell.identifier, for: indexPath) as! NumberCell
             cell.delegate = self
             cell.position = indexPath.item
+            cell.enabled = item.enabled
             cell.contentView.layer.cornerRadius = 10
             cell.itemLabel.text = numberConfig.label
             if(!cell.initialized) {
@@ -266,6 +272,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
             let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: BinaryCell.identifier, for: indexPath) as! BinaryCell
             cell.delegate = self
             cell.position = indexPath.item
+            cell.enabled = item.enabled
             cell.contentView.layer.cornerRadius = 10
             cell.itemLabel.text = item.config.label
             if(!cell.initialized) {

@@ -18,6 +18,19 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
     var label: String = ""
     var value: Int = 0
     var initialized: Bool = false
+    var enabled: Bool = true {
+        didSet {
+            disableButton.tintColor = enabled ? .gray : .red
+            if(enabled) {
+                overlayView.removeFromSuperview()
+            }
+            else {
+                addSubview(overlayView)
+                addSubview(disableButton)
+                configureOverlayView()
+            }
+        }
+    }
     
     lazy var itemLabel: UILabel = {
         let label = UILabel()
@@ -25,6 +38,25 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
         label.textColor = .white
         label.textAlignment = .left
         return label
+    }()
+    
+    lazy var disableButton: UIButton = {
+        let button = UIButton()
+        
+        button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
+        button.backgroundColor = .clear
+        button.tintColor = .gray
+        
+        button.addTarget(self, action: #selector(didTapDisable), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var overlayView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .black
+        view.alpha = 0.6
+        return view
     }()
     
     lazy var valueStepper: UIStepper = {
@@ -67,12 +99,14 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
     
     func addSubviews() {
         contentView.addSubview(itemLabel)
+        contentView.addSubview(disableButton)
         contentView.addSubview(valueStepper)
         contentView.addSubview(valueTextField)
     }
     
     func configureUI() {
         configureLabel()
+        configureDisableButton()
         configureTextField()
         configureStepper()
     }
@@ -105,6 +139,28 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
             valueStepper.topAnchor.constraint(equalTo: valueTextField.topAnchor),
             valueStepper.bottomAnchor.constraint(equalTo: valueTextField.bottomAnchor)
         ])
+    }
+    
+    func configureDisableButton() {
+        disableButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            disableButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            disableButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            disableButton.heightAnchor.constraint(equalToConstant: 25)
+        ])
+    }
+    
+    func configureOverlayView() {
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlayView.heightAnchor.constraint(equalTo: heightAnchor),
+            overlayView.widthAnchor.constraint(equalTo: widthAnchor)
+        ])
+    }
+    
+    @objc func didTapDisable() {
+        enabled = !enabled
+        delegate?.didToggle(enabled: enabled, position: position)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

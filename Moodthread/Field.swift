@@ -13,11 +13,14 @@ public class Field: NSObject, NSSecureCoding {
     
     var config: ItemConfiguration = ItemConfiguration(label: "N/A", type: .binary)
     var value: Any = false
-    override public var description: String { return "\(config.type): \(config.label) \(value)" }
+    var enabled: Bool = true
     
-    init(config: ItemConfiguration, value: Any) {
+    override public var description: String { return "\(config.type): \(config.label) \(value) \(enabled)" }
+    
+    init(config: ItemConfiguration, value: Any, enabled: Bool = true) {
         self.config = config
         self.value = value
+        self.enabled = true
     }
     
     public required init?(coder: NSCoder) {
@@ -27,11 +30,13 @@ public class Field: NSObject, NSSecureCoding {
         if let value = coder.decodeObject(forKey: "value") {
             self.value = value
         }
+        self.enabled = coder.decodeBool(forKey: "enabled")
     }
 
     public func encode(with coder: NSCoder) {
         coder.encode(config, forKey: "config")
         coder.encode(value, forKey: "value")
+        coder.encode(enabled, forKey: "enabled")
     }
     
     public func isSummarizable() -> Bool {

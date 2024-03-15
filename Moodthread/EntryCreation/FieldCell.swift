@@ -7,6 +7,7 @@
 
 protocol FieldCellDelegate: AnyObject {
     func didChangeValue<T>(value: T, position: Int)
+    func didToggle(enabled: Bool, position: Int)
 }
 
 protocol FieldCell {

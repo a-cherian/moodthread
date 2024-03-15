@@ -18,6 +18,19 @@ class SliderCell: UICollectionViewCell, FieldCell {
     var label: String = ""
     var value: Float = 0
     var initialized: Bool = false
+    var enabled: Bool = true {
+        didSet {
+            disableButton.tintColor = enabled ? .gray : .red
+            if(enabled) {
+                overlayView.removeFromSuperview()
+            }
+            else {
+                addSubview(overlayView)
+                addSubview(disableButton)
+                configureOverlayView()
+            }
+        }
+    }
     
     lazy var itemLabel: UILabel = {
         let label = UILabel()
@@ -25,6 +38,25 @@ class SliderCell: UICollectionViewCell, FieldCell {
         label.textColor = .white
         label.textAlignment = .left
         return label
+    }()
+    
+    lazy var disableButton: UIButton = {
+        let button = UIButton()
+        
+        button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
+        button.backgroundColor = .clear
+        button.tintColor = .gray
+        
+        button.addTarget(self, action: #selector(didTapDisable), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var overlayView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .black
+        view.alpha = 0.6
+        return view
     }()
     
     lazy var valueSlider: UISlider = {
@@ -53,10 +85,12 @@ class SliderCell: UICollectionViewCell, FieldCell {
     func addSubviews() {
         contentView.addSubview(valueSlider)
         contentView.addSubview(itemLabel)
+        contentView.addSubview(disableButton)
     }
     
     func configureUI() {
         configureLabel()
+        configureDisableButton()
         configureSlider()
     }
     
@@ -78,6 +112,28 @@ class SliderCell: UICollectionViewCell, FieldCell {
             valueSlider.heightAnchor.constraint(equalToConstant: 50),
             valueSlider.widthAnchor.constraint(equalTo: widthAnchor, constant: -40)
         ])
+    }
+    
+    func configureDisableButton() {
+        disableButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            disableButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            disableButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            disableButton.heightAnchor.constraint(equalToConstant: 25)
+        ])
+    }
+    
+    func configureOverlayView() {
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlayView.heightAnchor.constraint(equalTo: heightAnchor),
+            overlayView.widthAnchor.constraint(equalTo: widthAnchor)
+        ])
+    }
+    
+    @objc func didTapDisable() {
+        enabled = !enabled
+        delegate?.didToggle(enabled: enabled, position: position)
     }
     
     @objc func didValueChange() {
