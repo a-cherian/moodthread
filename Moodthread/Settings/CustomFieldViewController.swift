@@ -9,8 +9,7 @@ import UIKit
 
 class CustomFieldViewController: SettingsTableViewController, UITableViewDataSource, CustomFieldCellDelegate, ActionCellDelegate {
 
-    var dataSource: [ItemConfiguration] = [ItemConfiguration(label: "Medication Taken", type: .binary),
-                                           NumberConfiguration(label: "Cups of Water", type: .number, min: 0, max: 16)]
+    var dataSource: [ItemConfiguration] = []
     
     init() {
         super.init(labels: [:])
@@ -110,21 +109,6 @@ class CustomFieldViewController: SettingsTableViewController, UITableViewDataSou
     
     func didSubmitOccur() {
         saveFields()
-        
-        let alert = UIAlertController(
-            title: "",
-            message: "Custom fields were successfully saved",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(
-            title: "OK",
-            style: .default,
-            handler: { _ in
-        }))
-        present(alert,
-                animated: true,
-                completion: nil
-        )
     }
     
     func didDeleteOccur(position: Int) {

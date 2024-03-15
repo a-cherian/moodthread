@@ -230,17 +230,6 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
         return dateComponents
     }
     
-    func didUpdate() {
-//        let oldView = compareController?.rootView
-//        compareController = UIHostingController(rootView: oldView ?? LineChartView(statsManager: statsManager, delegate: self))
-//        compareController?.sizingOptions = .intrinsicContentSize
-//        chartStack.addArrangedSubview(compareController?.view ?? UIView())
-//        print("hi")
-//        compareController.view?.setNeedsLayout()
-//        compareController.view?.layoutIfNeeded()
-//        compareController.view?.invalidateIntrinsicContentSize()
-    }
-    
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
     }

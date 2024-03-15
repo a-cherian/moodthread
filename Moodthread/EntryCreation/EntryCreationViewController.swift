@@ -169,20 +169,6 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         }
         else {
             DataManager.shared.createEntry(time: date ?? Date(), fields: fields)
-            let alert = UIAlertController(
-                title: "",
-                message: "Mood entry was successfully created",
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(
-                title: "OK",
-                style: .default,
-                handler: { _ in
-            }))
-            present(alert,
-                    animated: true,
-                    completion: nil
-            )
         }
     }
     

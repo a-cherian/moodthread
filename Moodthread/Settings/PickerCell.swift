@@ -16,6 +16,7 @@ class PickerCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDataSource 
     
     static let identifier = "picker"
     static let size: CGFloat = 100
+    static let validTypes: [Type] = [Type.slider, Type.number, Type.binary]
     
     weak var delegate: PickerCellDelegate?
     
@@ -81,11 +82,13 @@ class PickerCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDataSource 
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return Type.allCases.count - 1
+        return PickerCell.validTypes.count
+//        return Type.allCases.count - 1
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return Type.allCases[row].rawValue
+        return PickerCell.validTypes[row].rawValue
+//        return Type.allCases[row].rawValue
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

@@ -40,7 +40,7 @@ class TabBarController: UITabBarController {
 //        let settings = SettingsViewController()
         let settings = CustomFieldViewController()
         settings.tabBarItem.image = UIImage(systemName: "gearshape.fill")
-        settings.tabBarItem.title = "Settings"
+        settings.tabBarItem.title = "Customize"
         let settingsNav = UINavigationController(rootViewController: settings)
         
         tabBar.backgroundColor = .black

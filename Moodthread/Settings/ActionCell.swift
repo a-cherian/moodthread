@@ -26,13 +26,15 @@ class ActionCell: UITableViewCell {
         
         button.backgroundColor = .black
         button.layer.cornerRadius = 10
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderWidth = 3
         button.setTitle(action, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 25, left: 40, bottom: 25, right: 40)
 //        UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 //        button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 50, leading: 50, bottom: 50, trailing: 50)
         
-        button.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapAction), for: .touchUpInside)
         return button
     }()
     
@@ -69,7 +71,29 @@ class ActionCell: UITableViewCell {
         ])
     }
     
-    @objc func didTapSubmit() {
+    @objc func didTapAction() {
         delegate?.didPerformAction(action: action)
+        if(action == "Save") { animateActionButton() }
+    }
+    
+    func animateActionButton() {
+        let prevTitle = actionButton.title(for: .normal)
+        actionButton.setTitle("", for: .normal)
+        actionButton.tintColor = .black
+        actionButton.setTitleColor(.black, for: .normal)
+        actionButton.setTitle("", for: .normal)
+        actionButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        
+        UIView.animate(withDuration: 0.8, animations: {
+            self.actionButton.backgroundColor = Appearance().tintColor
+        }) { _ in
+            self.actionButton.setTitle(prevTitle, for: .normal)
+            self.actionButton.setImage(UIImage(), for: .normal)
+            UIView.animate(withDuration: 0.4, animations: {
+                self.actionButton.backgroundColor = .black
+                self.actionButton.tintColor = .white
+                self.actionButton.setTitleColor(.white, for: .normal)
+            })
+        }
     }
 }

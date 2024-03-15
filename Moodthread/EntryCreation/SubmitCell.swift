@@ -20,6 +20,8 @@ class SubmitCell: UICollectionViewCell {
         
         button.backgroundColor = .black
         button.layer.cornerRadius = 10
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderWidth = 3
         button.setTitle("Submit", for: .normal)
         button.setTitleColor(.white, for: .normal)
         
@@ -61,5 +63,26 @@ class SubmitCell: UICollectionViewCell {
     
     @objc func didTapSubmit() {
         delegate?.didSubmitOccur()
+        animateSubmitButton()
+    }
+    
+    func animateSubmitButton() {
+        submitButton.setTitle("", for: .normal)
+        submitButton.tintColor = .black
+        submitButton.setTitleColor(.black, for: .normal)
+        submitButton.setTitle("", for: .normal)
+        submitButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        
+        UIView.animate(withDuration: 0.8, animations: {
+            self.submitButton.backgroundColor = Appearance().tintColor
+        }) { _ in
+            self.submitButton.setTitle("Submit", for: .normal)
+            self.submitButton.setImage(UIImage(), for: .normal)
+            UIView.animate(withDuration: 0.4, animations: {
+                self.submitButton.backgroundColor = .black
+                self.submitButton.tintColor = .white
+                self.submitButton.setTitleColor(.white, for: .normal)
+            })
+        }
     }
 }

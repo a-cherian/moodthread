@@ -58,7 +58,6 @@ struct DataManager {
     
     func updateEntry(entry: Entry) {
         let context = persistentContainer.viewContext
-        print(context.updatedObjects)
         
         do {
             try context.save()
