@@ -18,14 +18,14 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     var previousEntry: Entry? = nil
     
     var dismissTap = UITapGestureRecognizer()
-    lazy var clock: UILabel = {
-        let label = UILabel()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE — MMM d — h:mm a"
-        label.text = dateFormatter.string(from: date ?? Date())
-        label.textColor = .black
-        label.textAlignment = .center
-        return label
+    
+    lazy var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker(frame: CGRect(origin: CGPointZero, size: CGSize(width: 500, height: 200)))
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.timeZone = TimeZone.current
+        datePicker.contentHorizontalAlignment = .center
+        datePicker.addTarget(self, action: #selector(didPickDate(sender:)), for: .valueChanged)
+        return datePicker
     }()
     
     lazy var fieldsView: UICollectionView = {
@@ -53,6 +53,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
             previousEntry = entry
             fields = entry.fields!
             date = entry.time
+            datePicker.date = entry.time ?? Date()
         }
     }
     
@@ -70,6 +71,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         addSubviews()
         configureUI()
         addKeyboardDismissGesture()
+//        configureTimePicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,7 +100,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func addSubviews() {
-        view.addSubview(clock)
+        view.addSubview(datePicker)
         view.addSubview(fieldsView)
     }
 
@@ -108,23 +110,28 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func configureClock() {
-        clock.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            clock.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            clock.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
-            clock.heightAnchor.constraint(equalToConstant: 20),
-            clock.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
         if date == nil {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(didTimeChange), userInfo: nil, repeats: true)
         }
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            datePicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            datePicker.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        datePicker.subviews[0].backgroundColor = .black
+        datePicker.subviews[0].subviews[0].backgroundColor = .black
+        datePicker.subviews[0].subviews[1].backgroundColor = .black
+        datePicker.subviews[0].layer.cornerRadius = 10
+        datePicker.subviews[0].subviews[0].layer.cornerRadius = 10
+        datePicker.subviews[0].subviews[0].subviews[0].alpha = 0
     }
     
     func configureItems() {
         fieldsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             fieldsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            fieldsView.topAnchor.constraint(equalTo: clock.bottomAnchor, constant: Constants.TOP_MARGIN),
+            fieldsView.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 10),
             fieldsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             fieldsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             fieldsView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
@@ -137,24 +144,36 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     }
     
     @objc func didTimeChange() {
+        if(date != nil) { return }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE — MMM d — h:mm a"
-        clock.text = dateFormatter.string(from: Date())
+        datePicker.date = Date()
     }
+    
+    @objc func didPickDate(sender: UIDatePicker) {
+        date = sender.date
+     }
+
     
     @objc func didDismiss() {
         view.endEditing(true)
+    }
+    
+    @objc func didTapLabel() {
+        if(previousEntry != nil) { return }
+        print("tapped")
     }
     
     func didSubmitOccur() {
         // TO DO: notify submit
         if let entry = previousEntry {
             entry.fields = fields
+            entry.time = date ?? entry.time
             DataManager.shared.updateEntry(entry: entry)
             self.navigationController?.popViewController(animated: true)
         }
         else {
-            DataManager.shared.createEntry(time: Date(), fields: fields)
+            DataManager.shared.createEntry(time: date ?? Date(), fields: fields)
             let alert = UIAlertController(
                 title: "",
                 message: "Mood entry was successfully created",
