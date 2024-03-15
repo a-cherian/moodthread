@@ -159,11 +159,6 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         view.endEditing(true)
     }
     
-    @objc func didTapLabel() {
-        if(previousEntry != nil) { return }
-        print("tapped")
-    }
-    
     func didSubmitOccur() {
         // TO DO: notify submit
         if let entry = previousEntry {

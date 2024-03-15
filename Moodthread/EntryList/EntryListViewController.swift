@@ -36,11 +36,14 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     init(entries: [Entry]? = nil) {
         super.init(nibName: nil, bundle: nil)
         if let entries = entries {
-//            self.cells = entries.map( {getEntryCell(entry: $0)} )
-            cells.append(["" as Any])
             entries.forEach { entry in
                 cells.append(getEntryCell(entry: entry))
             }
+            
+            if entries.count == 0 { return }
+            let first = entries[0]
+            cells.insert([first.time as Any], at: 0)
+            
             preset = true
         }
     }
@@ -91,6 +94,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
                     cells[match] = getEntryCell(entry: cell)
                 }
             }
+            
             entriesView.reloadData()
             return
         }
@@ -152,8 +156,8 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
         }
         if let entry = cells[indexPath.item][0] as? Entry {
             let cell = entriesView.dequeueReusableCell(withReuseIdentifier: EntryCell.identifier, for: indexPath) as! EntryCell
-            guard let images = cells[indexPath.item][1] as? [UIImage?] else { print("hiiiii"); print(cells[indexPath.item]); return cell }
-            guard let text = cells[indexPath.item][2] as? String else { print("hi"); return cell }
+            guard let images = cells[indexPath.item][1] as? [UIImage?] else { return cell }
+            guard let text = cells[indexPath.item][2] as? String else { return cell }
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
             cell.arrowButton.tag = cell.position

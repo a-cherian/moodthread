@@ -12,7 +12,8 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
     var statsManager: StatsManager = StatsManager(entries: [])
     var currentOption: (String, String) = ("Mood", "Average") {
         didSet {
-            fieldSelector.setTitle(currentOption.0 + " • " + currentOption.1, for: .normal)
+            fieldSelector.setTitle(currentOption.0, for: .normal)
+            statSelector.setTitle(currentOption.1, for: .normal)
             refreshCalendar()
         }
     }
@@ -21,7 +22,21 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
         let button = UIButton()
         
         button.tintColor = .black
-        button.setTitle("Mood • Average", for: .normal)
+        button.setTitle("Mood", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        button.setImage(UIImage(systemName: "arrowtriangle.down.circle"), for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
+        button.sizeToFit()
+        button.showsMenuAsPrimaryAction = true
+        return button
+    }()
+    
+    var statSelector: UIButton = {
+        let button = UIButton()
+        
+        button.tintColor = .black
+        button.setTitle("Average", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
         button.setImage(UIImage(systemName: "arrowtriangle.down.circle"), for: .normal)
@@ -58,21 +73,34 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
     
     func addSubviews() {
         view.addSubview(fieldSelector)
+        view.addSubview(statSelector)
         view.addSubview(calendarView)
     }
 
     func configureUI() {
         configureFieldSelector()
+        configureStatSelector()
         configureCalendar()
     }
     
     func configureFieldSelector() {
         fieldSelector.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            fieldSelector.centerXAnchor.constraint(equalTo: calendarView.centerXAnchor),
+            fieldSelector.leftAnchor.constraint(equalTo: calendarView.leftAnchor),
+//            fieldSelector.rightAnchor.constraint(equalTo: calendarView.centerXAnchor),
             fieldSelector.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
             fieldSelector.heightAnchor.constraint(equalToConstant: 20),
-            fieldSelector.widthAnchor.constraint(equalTo: calendarView.widthAnchor)
+            fieldSelector.widthAnchor.constraint(equalTo: calendarView.widthAnchor, multiplier: 0.5)
+        ])
+    }
+    
+    func configureStatSelector() {
+        statSelector.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            statSelector.rightAnchor.constraint(equalTo: calendarView.rightAnchor),
+            statSelector.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
+            statSelector.heightAnchor.constraint(equalToConstant: 20),
+            statSelector.widthAnchor.constraint(equalTo: calendarView.widthAnchor, multiplier: 0.5)
         ])
     }
     
@@ -92,29 +120,35 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
     func refreshEntries() {
         let fetched = DataManager.shared.fetchEntries()
         
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy MM dd"
-//        let dateComponents = getDateComponents()
-//        let visibleDates: Dictionary<String, DateComponents> = dateComponents.reduce(into: [String:DateComponents]()) {
-//            $0[dateFormatter.string(from: Calendar.current.date(from: $1) ?? Date())] = $1
-//        }
-//        let filteredEntries = fetched.filter { visibleDates[dateFormatter.string(from: $0.time ?? Date())] != nil }
-//        
-//        statsManager = StatsManager(entries: filteredEntries)
-        
         statsManager = StatsManager(entries: fetched, dates: getDateComponents())
         
-        var actionItems: [UIAction] = []
-        let options = statsManager.getStatsOptions()
-        options.forEach { option in
-            let item = UIAction(title: option.0 + " • " + option.1) { (action) in
-                self.currentOption = option
+        var fieldItems: [UIAction] = []
+        let options = Dictionary(grouping: statsManager.getStatsOptions()) { $0.0 }
+        statsManager.fields.forEach { field in
+            let item = UIAction(title: field.label) { (action) in
+                self.currentOption = (options[field.label] ?? [("Mood", "Average"), ("Mood", "Highest"), ("Mood", "Lowest")])[0]
+                var statItems: [UIAction] = []
+                options[field.label]?.forEach { option in
+                    let item = UIAction(title: option.1) { (action) in
+                        self.currentOption = option
+                    }
+                    statItems.append(item)
+                }
+                self.statSelector.menu = UIMenu(title: "", options: .displayInline, children: statItems)
             }
-            actionItems.append(item)
+            fieldItems.append(item)
         }
         
-
-        fieldSelector.menu = UIMenu(title: "", options: .displayInline, children: actionItems)
+        var statItems: [UIAction] = []
+        options[currentOption.0]?.forEach { option in
+            let item = UIAction(title: option.1) { (action) in
+                self.currentOption = option
+            }
+            statItems.append(item)
+        }
+        
+        fieldSelector.menu = UIMenu(title: "", options: .displayInline, children: fieldItems)
+        statSelector.menu = UIMenu(title: "", options: .displayInline, children: statItems)
         
         refreshCalendar()
     }
