@@ -32,6 +32,9 @@
 		40A207452AD1064E00DCF23A /* MoodthreadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A207442AD1064E00DCF23A /* MoodthreadTests.swift */; };
 		40A2074F2AD1064E00DCF23A /* MoodthreadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2074E2AD1064E00DCF23A /* MoodthreadUITests.swift */; };
 		40A207512AD1064E00DCF23A /* MoodthreadUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A207502AD1064E00DCF23A /* MoodthreadUITestsLaunchTests.swift */; };
+		40AD346A2BFDCD890033A7CD /* UIButtonEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AD34692BFDCD890033A7CD /* UIButtonEX.swift */; };
+		40AD346C2BFEDFBB0033A7CD /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AD346B2BFEDFBB0033A7CD /* StepperView.swift */; };
+		40AD346E2BFEE7DC0033A7CD /* UIStackViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AD346D2BFEE7DC0033A7CD /* UIStackViewExtension.swift */; };
 		40B759BC2B1DAEE100F3549E /* EntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B759BB2B1DAEE100F3549E /* EntryCell.swift */; };
 		40B759BE2B21C86800F3549E /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B759BD2B21C86800F3549E /* DateCell.swift */; };
 		40B9B3492B229D740016E3CA /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9B3482B229D740016E3CA /* UIImageExtension.swift */; };
@@ -52,6 +55,8 @@
 		40C656072AF327A8006FD725 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C656062AF327A8006FD725 /* Field.swift */; };
 		40C656092AF39CA1006FD725 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C656082AF39CA1006FD725 /* DataManager.swift */; };
 		40C6560B2AF3ABAC006FD725 /* Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C6560A2AF3ABAC006FD725 /* Fields.swift */; };
+		40DFBA182C5DB7BC00E2296D /* RemindersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DFBA172C5DB7BC00E2296D /* RemindersViewController.swift */; };
+		40DFBA1B2C5DB83F00E2296D /* ReminderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DFBA1A2C5DB83F00E2296D /* ReminderCell.swift */; };
 		40E753CE2B74755600266936 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E753CD2B74755600266936 /* LabelCell.swift */; };
 		40E753D02B747D4F00266936 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E753CF2B747D4F00266936 /* ActionCell.swift */; };
 		40F05FCC2B5DFF4500B69CE8 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F05FCB2B5DFF4500B69CE8 /* StatsManager.swift */; };
@@ -103,6 +108,9 @@
 		40A2074A2AD1064E00DCF23A /* MoodthreadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoodthreadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A2074E2AD1064E00DCF23A /* MoodthreadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodthreadUITests.swift; sourceTree = "<group>"; };
 		40A207502AD1064E00DCF23A /* MoodthreadUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodthreadUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		40AD34692BFDCD890033A7CD /* UIButtonEX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonEX.swift; sourceTree = "<group>"; };
+		40AD346B2BFEDFBB0033A7CD /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
+		40AD346D2BFEE7DC0033A7CD /* UIStackViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackViewExtension.swift; sourceTree = "<group>"; };
 		40B759BB2B1DAEE100F3549E /* EntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryCell.swift; sourceTree = "<group>"; };
 		40B759BD2B21C86800F3549E /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
 		40B9B3482B229D740016E3CA /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
@@ -123,6 +131,8 @@
 		40C656062AF327A8006FD725 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		40C656082AF39CA1006FD725 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		40C6560A2AF3ABAC006FD725 /* Fields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fields.swift; sourceTree = "<group>"; };
+		40DFBA172C5DB7BC00E2296D /* RemindersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersViewController.swift; sourceTree = "<group>"; };
+		40DFBA1A2C5DB83F00E2296D /* ReminderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderCell.swift; sourceTree = "<group>"; };
 		40E753CD2B74755600266936 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		40E753CF2B747D4F00266936 /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		40F05FCB2B5DFF4500B69CE8 /* StatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsManager.swift; sourceTree = "<group>"; };
@@ -161,6 +171,8 @@
 				40B9B3482B229D740016E3CA /* UIImageExtension.swift */,
 				406C76382B674C570094A78E /* NSLayoutConstraintExtension.swift */,
 				4018ECFE2B7CAE8D0065285D /* MonthYearWheelPicker.swift */,
+				40AD34692BFDCD890033A7CD /* UIButtonEX.swift */,
+				40AD346D2BFEE7DC0033A7CD /* UIStackViewExtension.swift */,
 			);
 			path = External;
 			sourceTree = "<group>";
@@ -281,8 +293,11 @@
 				406C76322B673C260094A78E /* DynamicTableView.swift */,
 				40C07E4E2AE347E2002B63C8 /* SettingsViewController.swift */,
 				406C762B2B64A62A0094A78E /* CustomFieldViewController.swift */,
+				40DFBA172C5DB7BC00E2296D /* RemindersViewController.swift */,
+				40DFBA1A2C5DB83F00E2296D /* ReminderCell.swift */,
 				40E753CF2B747D4F00266936 /* ActionCell.swift */,
 				406C762D2B64A8B40094A78E /* CustomFieldCell.swift */,
+				40AD346B2BFEDFBB0033A7CD /* StepperView.swift */,
 				406C76342B673D190094A78E /* PickerCell.swift */,
 				406C763C2B67C2690094A78E /* StepperCell.swift */,
 				406C763A2B67572C0094A78E /* DropdownCell.swift */,
@@ -443,6 +458,7 @@
 				406C762A2B6489C40094A78E /* Appearance.swift in Sources */,
 				40E753D02B747D4F00266936 /* ActionCell.swift in Sources */,
 				405946482B2D1A6E00A6B1F9 /* Constants.swift in Sources */,
+				40AD346E2BFEE7DC0033A7CD /* UIStackViewExtension.swift in Sources */,
 				40C07E4F2AE347E2002B63C8 /* SettingsViewController.swift in Sources */,
 				40B759BE2B21C86800F3549E /* DateCell.swift in Sources */,
 				40B759BC2B1DAEE100F3549E /* EntryCell.swift in Sources */,
@@ -451,6 +467,7 @@
 				40C656072AF327A8006FD725 /* Field.swift in Sources */,
 				40A207352AD1064900DCF23A /* Moodthread.xcdatamodeld in Sources */,
 				40C07E4B2AE34799002B63C8 /* EntryListViewController.swift in Sources */,
+				40DFBA1B2C5DB83F00E2296D /* ReminderCell.swift in Sources */,
 				4018ED012B7CC2130065285D /* LineChartView.swift in Sources */,
 				4018ECFF2B7CAE8D0065285D /* MonthYearWheelPicker.swift in Sources */,
 				406C762E2B64A8B40094A78E /* CustomFieldCell.swift in Sources */,
@@ -461,10 +478,13 @@
 				40C07E4D2AE347C1002B63C8 /* StatsViewController.swift in Sources */,
 				40B9B34B2B231B0C0016E3CA /* DeleteCell.swift in Sources */,
 				40A2072D2AD1064900DCF23A /* SceneDelegate.swift in Sources */,
+				40AD346C2BFEDFBB0033A7CD /* StepperView.swift in Sources */,
 				406C76352B673D190094A78E /* PickerCell.swift in Sources */,
 				40E753CE2B74755600266936 /* LabelCell.swift in Sources */,
 				40C6560B2AF3ABAC006FD725 /* Fields.swift in Sources */,
 				40C656092AF39CA1006FD725 /* DataManager.swift in Sources */,
+				40DFBA182C5DB7BC00E2296D /* RemindersViewController.swift in Sources */,
+				40AD346A2BFDCD890033A7CD /* UIButtonEX.swift in Sources */,
 				40C07E642AE3BF37002B63C8 /* SubmitCell.swift in Sources */,
 				406C76302B64B8490094A78E /* SettingsTableViewController.swift in Sources */,
 				400421832B7F43820030234D /* HorizontalBarView.swift in Sources */,

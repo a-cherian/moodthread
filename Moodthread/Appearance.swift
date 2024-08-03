@@ -36,16 +36,6 @@ struct Appearance {
         
         var images: [UIImage?] = []
         
-        let mood_icons = [MOOD_LOWEST, MOOD_MID_HIGH, MOOD_MID, MOOD_MID_LOW, MOOD_HIGHEST]
-        
-//        print(Float(mood_icons.count) / (values.max - values.min))
-//        print(values.v / Float(mood_icons.count) / (values.max - values.min))
-        
-//        images.append(UIImage(named: mood_icons[(values.max - values.min) / values.v]))
-        
-//        let margin =  (values.max - values.min) / Float(mood_icons.count)
-        
-        
         switch (values.v) {
         case ..<1:
             images.append(UIImage(named: MOOD_LOWEST)?.withRenderingMode(.alwaysTemplate))

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SubmitDelegate: AnyObject {
-    func didSubmitOccur()
+    func didSubmitOccur() -> Bool
 }
 
 class SubmitCell: UICollectionViewCell {
@@ -62,8 +62,10 @@ class SubmitCell: UICollectionViewCell {
     }
     
     @objc func didTapSubmit() {
-        delegate?.didSubmitOccur()
-        animateSubmitButton()
+        if(delegate?.didSubmitOccur() ?? false)
+        {
+            animateSubmitButton()
+        }
     }
     
     func animateSubmitButton() {

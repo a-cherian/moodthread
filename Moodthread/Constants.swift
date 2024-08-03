@@ -16,4 +16,5 @@ struct Constants {
     static let BOTTOM_MARGIN: CGFloat = -20
     static let WIDTH_MARGIN: CGFloat = -50
     static let CUSTOM_FIELDS_KEY = "customFields"
+    static let NOTIFICATIONS_KEY = "notifications"
 }

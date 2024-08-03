@@ -1,5 +1,5 @@
 //
-//  SubmitCell.swift
+//  ActionCell.swift
 //  Moodthread
 //
 //  Created by AC on 2/7/24.
@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ActionCellDelegate: AnyObject {
-    func didPerformAction(action: String)
+    func didPerformAction(action: String) -> Bool
 }
 
 class ActionCell: UITableViewCell {
@@ -72,8 +72,8 @@ class ActionCell: UITableViewCell {
     }
     
     @objc func didTapAction() {
-        delegate?.didPerformAction(action: action)
-        if(action == "Save") { animateActionButton() }
+        let success = delegate?.didPerformAction(action: action) ?? false
+        if(action == "Save" && success) { animateActionButton() }
     }
     
     func animateActionButton() {

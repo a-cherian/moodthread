@@ -86,8 +86,8 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
     func configureFieldSelector() {
         fieldSelector.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            fieldSelector.leftAnchor.constraint(equalTo: calendarView.leftAnchor),
-//            fieldSelector.rightAnchor.constraint(equalTo: calendarView.centerXAnchor),
+//            fieldSelector.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -Constants.WIDTH_MARGIN / 2),
+            fieldSelector.rightAnchor.constraint(equalTo: calendarView.centerXAnchor),
             fieldSelector.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
             fieldSelector.heightAnchor.constraint(equalToConstant: 20),
             fieldSelector.widthAnchor.constraint(equalTo: calendarView.widthAnchor, multiplier: 0.5)
@@ -97,6 +97,7 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
     func configureStatSelector() {
         statSelector.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+//            fieldSelector.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: Constants.WIDTH_MARGIN / 2),
             statSelector.rightAnchor.constraint(equalTo: calendarView.rightAnchor),
             statSelector.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.TOP_MARGIN),
             statSelector.heightAnchor.constraint(equalToConstant: 20),

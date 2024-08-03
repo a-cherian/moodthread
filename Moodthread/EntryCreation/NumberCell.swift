@@ -80,6 +80,8 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
         textField.textAlignment = .center
         textField.text = String(value)
         textField.delegate = self
+
+        textField.layer.cornerRadius = 5
         
         textField.addTarget(self, action: #selector(didTextChange), for: .editingDidEnd)
         return textField
@@ -164,7 +166,8 @@ class NumberCell: UICollectionViewCell, FieldCell, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let allowedCharacters = CharacterSet.decimalDigits
+        var allowedCharacters = CharacterSet.decimalDigits
+        allowedCharacters.insert("-")
         let characterSet = CharacterSet(charactersIn: string)
         return allowedCharacters.isSuperset(of: characterSet)
     }

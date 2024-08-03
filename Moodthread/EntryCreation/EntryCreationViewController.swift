@@ -82,6 +82,8 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     func loadFields() {
         if(previousEntry != nil) { return }
         
+        fields = []
+        
         let customConfigs = DataManager.shared.getCustomFields()
         let customFields: [Field] = customConfigs.compactMap {
             switch($0.type) {
@@ -89,7 +91,8 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
                 guard let numConfig = $0 as? NumberConfiguration else { return nil }
                 return Field(config: $0, value: (numConfig.minValue + numConfig.maxValue) / 2)
             case .number:
-                return Field(config: $0, value: 0)
+                guard let numConfig = $0 as? NumberConfiguration else { return nil }
+                return Field(config: $0, value: Int(numConfig.minValue))
             case .binary:
                 return Field(config: $0, value: false)
             default:
@@ -124,7 +127,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         datePicker.subviews[0].subviews[1].backgroundColor = .black
         datePicker.subviews[0].layer.cornerRadius = 10
         datePicker.subviews[0].subviews[0].layer.cornerRadius = 10
-        datePicker.subviews[0].subviews[0].subviews[0].alpha = 0
+//        datePicker.subviews[0].subviews[0].subviews[0].alpha = 0
     }
     
     func configureItems() {
@@ -159,8 +162,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         view.endEditing(true)
     }
     
-    func didSubmitOccur() {
-        // TO DO: notify submit
+    func didSubmitOccur() -> Bool {
         if let entry = previousEntry {
             entry.fields = fields
             entry.time = date ?? entry.time
@@ -170,6 +172,8 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         else {
             DataManager.shared.createEntry(time: date ?? Date(), fields: fields)
         }
+        
+        return true
     }
     
     
@@ -244,6 +248,9 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
             cell.enabled = item.enabled
             cell.contentView.layer.cornerRadius = 10
             cell.itemLabel.text = sliderConfig.label
+            if(sliderConfig.minValue != cell.valueSlider.minimumValue || sliderConfig.maxValue != cell.valueSlider.maximumValue) {
+                cell.initialized = false
+            }
             if(!cell.initialized) {
                 cell.valueSlider.minimumValue = sliderConfig.minValue
                 cell.valueSlider.maximumValue = sliderConfig.maxValue
@@ -259,6 +266,9 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
             cell.enabled = item.enabled
             cell.contentView.layer.cornerRadius = 10
             cell.itemLabel.text = numberConfig.label
+            if(Double(numberConfig.minValue) != cell.valueStepper.minimumValue || Double(numberConfig.maxValue) != cell.valueStepper.maximumValue) {
+                cell.initialized = false
+            }
             if(!cell.initialized) {
                 cell.valueStepper.minimumValue = Double(numberConfig.minValue)
                 cell.valueStepper.maximumValue = Double(numberConfig.maxValue)

@@ -9,10 +9,7 @@ import UIKit
 
 class EntryListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    var items: [Field] = [Field(config: NumberConfiguration(label: "Mood", type: .slider, min: 0, max: 5), value: Float(3)),
-                          Field(config: NumberConfiguration(label: "Energy", type: .slider, min: 0, max: 5), value: Float(3)),
-                          Field(config: ItemConfiguration(label: "Toggle", type: .binary), value: false),
-                          Field(config: NumberConfiguration(label: "Number", type: .number, min: -5, max: 10000), value: 23)]
+    var items: [Field] = []
     var cells: [[Any]] = []
     var preset: Bool = false
     

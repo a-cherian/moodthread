@@ -98,4 +98,38 @@ struct DataManager {
         }
         return []
     }
+    
+    func saveFields(configs: [ItemConfiguration]) {
+        let configsArray = configs.compactMap { $0.stringify() }
+
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(configsArray, forKey: Constants.CUSTOM_FIELDS_KEY)
+    }
+    
+    func getNotifications() -> [Date] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.timeZone = .current
+        
+        let userDefaults = UserDefaults.standard
+        if let customConfigs = userDefaults.array(forKey: Constants.NOTIFICATIONS_KEY) as? [String] {
+            let unpacked = customConfigs.compactMap { return dateFormatter.date(from: $0) }
+            return unpacked
+        }
+        return []
+    }
+    
+    func saveNotifications(dates: [Date]) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.timeZone = .current
+        
+        let notifs = dates.compactMap {
+            let str = dateFormatter.string(from: $0)
+            return str
+        }
+
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(notifs, forKey: Constants.NOTIFICATIONS_KEY)
+    }
 }
