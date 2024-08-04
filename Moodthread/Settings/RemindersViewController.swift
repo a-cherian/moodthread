@@ -161,10 +161,13 @@ class RemindersViewController: SettingsTableViewController, UITableViewDataSourc
                     handler: { _ in
                     // cancel action
                 }))
-                self.present(alert,
-                        animated: true,
-                        completion: nil
-                )
+                
+                DispatchQueue.main.async(execute: {
+                    self.present(alert,
+                                 animated: true,
+                                 completion: nil
+                    )
+                })
             }
         }
     }
