@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EntryCreationViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SubmitDelegate, DeleteDelegate, FieldCellDelegate {
+class EntryCreationViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SubmitDelegate, DeleteDelegate, FieldCellDelegate, ActionCellDelegate {
     
     let defaultFields: [Field] = [Field(config: NumberConfiguration(label: "Mood", type: .slider, min: 0, max: 5), value: Float(2.5)),
                           Field(config: NumberConfiguration(label: "Energy", type: .slider, min: 0, max: 5), value: Float(2.5))]
@@ -44,12 +44,14 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         collection.register(BinaryCell.self, forCellWithReuseIdentifier: BinaryCell.identifier)
         collection.register(SubmitCell.self, forCellWithReuseIdentifier: SubmitCell.identifier)
         collection.register(DeleteCell.self, forCellWithReuseIdentifier: DeleteCell.identifier)
+        collection.register(SubmitDeleteCell.self, forCellWithReuseIdentifier: SubmitDeleteCell.identifier)
         return collection
     }()
     
     init(entry: Entry? = nil) {
         super.init(nibName: nil, bundle: nil)
         if let entry = entry {
+            navigationItem.title = "Edit Entry"
             previousEntry = entry
             fields = entry.fields!
             date = entry.time
@@ -64,7 +66,7 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        navigationItem.title = "Add Entry"
+        if(previousEntry == nil) { navigationItem.title = "Edit Entry" }
         
         loadFields()
         
@@ -209,6 +211,18 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
         }
     }
     
+    func didPerformAction(action: String) -> Bool {
+        switch(action) {
+        case "Submit":
+            return didSubmitOccur()
+        case "Delete":
+            didDeleteOccur()
+            return true
+        default:
+            return true
+        }
+    }
+    
     func didChangeValue<T>(value: T, position: Int) {
         fields[position].value = value
     }
@@ -218,24 +232,36 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if previousEntry != nil { return fields.count + 2 }
+//        if previousEntry != nil { return fields.count + 2 }
         return fields.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == fields.count {
-            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SubmitCell.identifier, for: indexPath) as! SubmitCell
+            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SubmitDeleteCell.identifier, for: indexPath) as! SubmitDeleteCell
             cell.delegate = self
             cell.contentView.layer.cornerRadius = 10
+            
+            if previousEntry != nil {
+                cell.addDeleteButton()
+                print("hi")
+            }
+            
             return cell
         }
-        
-        if indexPath.item == fields.count + 1 {
-            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: DeleteCell.identifier, for: indexPath) as! DeleteCell
-            cell.delegate = self
-            cell.contentView.layer.cornerRadius = 10
-            return cell
-        }
+//        else if indexPath.item == fields.count {
+//            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: SubmitCell.identifier, for: indexPath) as! SubmitCell
+//            cell.delegate = self
+//            cell.contentView.layer.cornerRadius = 10
+//            return cell
+//        }
+//        
+//        if indexPath.item == fields.count + 1 {
+//            let cell = fieldsView.dequeueReusableCell(withReuseIdentifier: DeleteCell.identifier, for: indexPath) as! DeleteCell
+//            cell.delegate = self
+//            cell.contentView.layer.cornerRadius = 10
+//            return cell
+//        }
         
         let item = fields[indexPath.item]
         
@@ -319,28 +345,27 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item == fields.count { return CGSize(width: 200, height: 75) } // submit cell
-        if indexPath.item == fields.count + 1 { return CGSize(width: 200, height: 50) } // delete cell
+        let viewWidth: CGFloat = view.frame.width - 40
+        let viewHeight: CGFloat = 120
+        
+        if indexPath.item == fields.count { return CGSize(width: viewWidth, height: viewHeight) } // submit cell
+//        if indexPath.item == fields.count + 1 { return CGSize(width: 200, height: 50) } // delete cell
         
         let item = fields[indexPath.item]
         
-        let viewWidth = view.frame.width - 40
-        let submitWidth = 200
+//        if item.config.type == .submit && previousEntry != nil {
+//            viewHeight =
+//        }
         
-        if item.config.type == .slider || item.config.type == .binary || item.config.type == .number || item.config.type == .select {
-            return CGSize(width: viewWidth, height: 120)
+        if item.config.type == .slider || item.config.type == .binary || item.config.type == .number || item.config.type == .select || item.config.type == .submit {
+            return CGSize(width: viewWidth, height: viewHeight)
         }
 //        if item.type == .select {
 //            let cell = itemsView.dequeueReusableCell(withReuseIdentifier: SelectCell.identifier, for: indexPath) as! SelectCell
 //            return cell.buttonsView.contentSize
 ////            return UICollectionViewFlowLayout.automaticSize
 //        }
-        else if item.config.type == .submit {
-            return CGSize(width: submitWidth, height: 75)
-        }
-        else {
-            return CGSize(width: 0, height: 0)
-        }
+        return CGSize(width: 0, height: 0)
     }
 }
 

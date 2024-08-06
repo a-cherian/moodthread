@@ -12,6 +12,7 @@
 		4018ECFF2B7CAE8D0065285D /* MonthYearWheelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018ECFE2B7CAE8D0065285D /* MonthYearWheelPicker.swift */; };
 		4018ED012B7CC2130065285D /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018ED002B7CC2130065285D /* LineChartView.swift */; };
 		401B885E2B7B470E005F59E9 /* MonthYearWheelPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 401B885D2B7B470E005F59E9 /* MonthYearWheelPicker */; };
+		4037C1C02C61AE7F001EAEB7 /* SubmitDeleteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4037C1BF2C61AE7F001EAEB7 /* SubmitDeleteCell.swift */; };
 		405946482B2D1A6E00A6B1F9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405946472B2D1A6E00A6B1F9 /* Constants.swift */; };
 		406C762A2B6489C40094A78E /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C76292B6489C40094A78E /* Appearance.swift */; };
 		406C762C2B64A62A0094A78E /* CustomFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C762B2B64A62A0094A78E /* CustomFieldViewController.swift */; };
@@ -84,6 +85,7 @@
 		400421822B7F43820030234D /* HorizontalBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalBarView.swift; sourceTree = "<group>"; };
 		4018ECFE2B7CAE8D0065285D /* MonthYearWheelPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthYearWheelPicker.swift; sourceTree = "<group>"; };
 		4018ED002B7CC2130065285D /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
+		4037C1BF2C61AE7F001EAEB7 /* SubmitDeleteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubmitDeleteCell.swift; sourceTree = "<group>"; };
 		405946472B2D1A6E00A6B1F9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		406C76292B6489C40094A78E /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		406C762B2B64A62A0094A78E /* CustomFieldViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFieldViewController.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 				40C60D902AF23C4D0061312B /* SelectOptionCell.swift */,
 				40C07E632AE3BF37002B63C8 /* SubmitCell.swift */,
 				40B9B34A2B231B0C0016E3CA /* DeleteCell.swift */,
+				4037C1BF2C61AE7F001EAEB7 /* SubmitDeleteCell.swift */,
 			);
 			path = EntryCreation;
 			sourceTree = "<group>";
@@ -450,6 +453,7 @@
 				40C07E602AE3A9D8002B63C8 /* ItemConfiguration.swift in Sources */,
 				406C76392B674C570094A78E /* NSLayoutConstraintExtension.swift in Sources */,
 				406C76372B6742C70094A78E /* Type.swift in Sources */,
+				4037C1C02C61AE7F001EAEB7 /* SubmitDeleteCell.swift in Sources */,
 				40C60D912AF23C4D0061312B /* SelectOptionCell.swift in Sources */,
 				406C763B2B67572C0094A78E /* DropdownCell.swift in Sources */,
 				40A2072B2AD1064900DCF23A /* AppDelegate.swift in Sources */,

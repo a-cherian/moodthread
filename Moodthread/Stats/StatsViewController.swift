@@ -149,10 +149,7 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
             pickerController.popoverPresentationController?.sourceView = monthSelector
             pickerController.popoverPresentationController?.sourceRect = CGRect(origin: monthSelector.bounds.origin, size: CGSize(width: popoverSize.width, height: monthSelector.bounds.height))
             self.present(pickerController, animated: true)
-//            present(popover: viewController, from: sender)
-//            let popover = UIPopoverPresentationController(pickerController: self, presenting: nil)
-//            view.addSubview(monthPicker)
-//            configureMonthPicker()
+            pickerController.popoverPresentationController?.sourceRect = sender.bounds
         }
     }
     

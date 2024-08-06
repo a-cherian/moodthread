@@ -62,12 +62,10 @@ class ActionCell: UITableViewCell {
     func configureActionButton() {
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            actionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -80),
-            actionButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
-//            submitButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            actionButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             actionButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             actionButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-//            itemLabel.heightAnchor.constraint(equalToConstant: 25),
+            actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
     }
     
