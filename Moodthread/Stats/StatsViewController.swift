@@ -19,6 +19,16 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
         }
     }
     var compareController: UIHostingController<LineChartView>? = nil
+    
+    var pickerController: UIViewController = {
+        let controller = UIViewController()
+        let popoverSize = CGSize(width: 400, height: 300)
+//        controller.view = monthPicker
+        controller.preferredContentSize = popoverSize
+        controller.modalPresentationStyle = .popover
+        controller.popoverPresentationController?.permittedArrowDirections = .up
+        return controller
+    }()
 
     var monthSelector: UIButton = {
         let button = UIButton()
@@ -71,6 +81,10 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
         navigationItem.title = "Statistics"
         
         monthPicker.onDateSelected = didPickDate
+        pickerController.popoverPresentationController?.delegate = self
+        pickerController.popoverPresentationController?.sourceView = monthSelector
+        pickerController.popoverPresentationController?.sourceRect = monthSelector.bounds
+        pickerController.view = monthPicker
         
         addSubviews()
         configureUI()
@@ -135,21 +149,11 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
     }
     
     @objc func didTapMonthSelector(_ sender: UIButton) {
-        if(view.subviews.contains(monthPicker)) {
-            monthPicker.removeFromSuperview()
-        }
-        else {
-            let pickerController = UIViewController()
-            let popoverSize = CGSize(width: 400, height: 300)
-            pickerController.view = monthPicker
-            pickerController.preferredContentSize = popoverSize
-            pickerController.modalPresentationStyle = .popover
-            pickerController.popoverPresentationController?.delegate = self
-            pickerController.popoverPresentationController?.permittedArrowDirections = .up
-            pickerController.popoverPresentationController?.sourceView = monthSelector
-            pickerController.popoverPresentationController?.sourceRect = CGRect(origin: monthSelector.bounds.origin, size: CGSize(width: popoverSize.width, height: monthSelector.bounds.height))
+        pickerController.popoverPresentationController?.sourceView = monthSelector
+        pickerController.popoverPresentationController?.sourceRect = monthSelector.bounds
+        pickerController.view = monthPicker
+        if(!isModal(pickerController)) {
             self.present(pickerController, animated: true)
-            pickerController.popoverPresentationController?.sourceRect = sender.bounds
         }
     }
     
@@ -229,6 +233,12 @@ class StatsViewController: UIViewController, UIPopoverPresentationControllerDele
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+    
+    func isModal(_ vc: UIViewController) -> Bool {
+        return vc.presentingViewController?.presentedViewController == vc
+            || (vc.navigationController != nil && vc.navigationController?.presentingViewController?.presentedViewController == vc.navigationController)
+            || vc.tabBarController?.presentingViewController is UITabBarController
     }
 }
 

@@ -149,7 +149,6 @@ class SelectCell: UICollectionViewCell, FieldCell/*, UICollectionViewDataSource,
 //        let item = options[indexPath.item]
 //        let cell = buttonsView.dequeueReusableCell(withReuseIdentifier: SliderCell.identifier, for: indexPath) as! SelectOptionCell
 //        cell.button.setTitle(item, for: .normal)
-//        print("hi")
 //        
 //        return cell
 //    }

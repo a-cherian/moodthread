@@ -8,6 +8,7 @@
 import Foundation
 
 enum Type: String, CaseIterable {
+    // do NOT change raw type strings, used for encoding/decoding configurations
     case slider = "Slider"
     case number = "Number"
     case binary = "Binary"

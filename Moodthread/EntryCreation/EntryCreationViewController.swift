@@ -180,7 +180,6 @@ class EntryCreationViewController: UIViewController, UICollectionViewDataSource,
     
     
     func didDeleteOccur() {
-        // TO DO: confirm delete
         let alert = UIAlertController(
             title: "Confirm deletion",
             message: "This will delete this entry. This action is irreversible. Do you wish to proceed?",

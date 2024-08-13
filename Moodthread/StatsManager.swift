@@ -92,7 +92,6 @@ struct StatsManager {
             } ?? []
         }
         
-        // TO DO: fetch global max and min
         let max: Float = configs.max(by: { $0.maxValue < $1.maxValue })?.maxValue ?? 0
         let min: Float = configs.min(by: { $0.minValue < $1.minValue })?.minValue ?? 5
         

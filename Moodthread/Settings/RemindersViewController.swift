@@ -150,19 +150,19 @@ class RemindersViewController: SettingsTableViewController, UITableViewDataSourc
                     }
                 })
             default:
-                let alert = UIAlertController(
-                    title: "Notifications permissions not enabled",
-                    message: "Moodthread does not have permissions to send notifications. If you would like to use reminders, please give Moodthread permission to send notifications in your device settings.",
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(
-                    title: "OK",
-                    style: .default,
-                    handler: { _ in
-                    // cancel action
-                }))
-                
                 DispatchQueue.main.async(execute: {
+                    let alert = UIAlertController(
+                        title: "Notifications permissions not enabled",
+                        message: "Moodthread does not have permissions to send notifications. If you would like to use reminders, please give Moodthread permission to send notifications in your device settings.",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(
+                        title: "OK",
+                        style: .default,
+                        handler: { _ in
+                        // cancel action
+                    }))
+                    
                     self.present(alert,
                                  animated: true,
                                  completion: nil
