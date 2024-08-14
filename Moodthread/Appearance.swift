@@ -24,6 +24,11 @@ struct Appearance {
     // misc icon asset names
     static let MISC = "hexagon.fill"
     
+    // icon colors
+    static let ICON_GREEN = UIColor(red: 163 / 255, green: 222 / 255, blue: 194 / 255, alpha: 1)
+    static let ICON_YELLOW = UIColor(red: 244 / 255, green: 227 / 255, blue: 156 / 255, alpha: 1)
+    static let ICON_RED = UIColor(red: 255 / 255, green: 112 / 255, blue: 126 / 255, alpha: 1)
+    
     var tintColor = {
         guard let scene = (UIApplication.shared.connectedScenes.first as? UIWindowScene), let window = scene.windows.first else {
             return Constants.accentColor
@@ -81,20 +86,46 @@ struct Appearance {
         return images
     }
     
-    static func getColor(values: (v: Float, min: Float, max: Float)?) -> UIColor {
-        guard let values = values else { return .gray }
+    static func getColor(values: (v: Float, min: Float, max: Float)?) -> [UIColor] {
+        guard let values = values else { return [.gray, .gray, .gray] }
         
         let range = values.max - values.min
         
+        var colors: [UIColor] = [.gray, .gray, .gray]
+        
+        switch (values.v) {
+        case ..<2:
+            colors[0] = ICON_RED
+        case 2..<3:
+            colors[0] = ICON_YELLOW
+        case 3...:
+            colors[0] = ICON_GREEN
+        default:
+            colors[0] = .gray
+        }
+        
+        switch (values.v) {
+        case ..<1.25:
+            colors[1] = ICON_RED
+        case 1.25..<3.75:
+            colors[1] = ICON_YELLOW
+        case 3.75...:
+            colors[1] = ICON_GREEN
+        default:
+            colors[1] = .gray
+        }
+        
         switch (values.v) {
         case values.min..<(values.min + range/3):
-            return .red
+            colors[2] = ICON_RED
         case (values.min + range/3)..<(values.min + range * 2/3):
-            return .yellow
+            colors[2] = ICON_YELLOW
         case (values.min + range * 2/3)...values.max:
-            return .green
+            colors[2] = ICON_GREEN
         default:
-            return .gray
+            colors[3] = .gray
         }
+        
+        return colors
     }
 }

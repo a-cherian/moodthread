@@ -146,9 +146,12 @@ class EntryCell: UICollectionViewCell {
         ])
     }
     
-    func setIcons(icons: [UIImage?]) {
+    func setIcons(icons: [UIImage?], colors: [UIColor]) {
         moodIconView.image = icons[0]
+        moodIconView.tintColor = colors[0]
+        
         energyIconView.image = icons[1]
+        energyIconView.tintColor = colors[1]
     }
     
 //    func setSummary(fields: [Field]) {

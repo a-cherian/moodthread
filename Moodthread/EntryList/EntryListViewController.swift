@@ -13,6 +13,14 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     var cells: [[Any]] = []
     var preset: Bool = false
     
+    let ENTRY_INDEX = 0
+    let ICON_INDEX = 1
+    let COLOR_INDEX = 2
+    let TEXT_INDEX = 3
+    
+    let MOOD = 0
+    let ENERGY = 1
+    
     var dismissTap = UITapGestureRecognizer()
     
     lazy var entriesView: UICollectionView = {
@@ -135,10 +143,11 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
             return (field.extractFloat() ?? (config.maxValue + config.minValue) / 2, config.minValue, config.maxValue)
         }
         
-        let icons = [Appearance.getIcons(values: tuples[Constants.MOOD])[Constants.MOOD], Appearance.getIcons(values: tuples[Constants.ENERGY])[Constants.ENERGY]]
+        let icons = [Appearance.getIcons(values: tuples[MOOD])[MOOD], Appearance.getIcons(values: tuples[ENERGY])[ENERGY]]
+        let colors = [Appearance.getColor(values: tuples[MOOD])[MOOD], Appearance.getColor(values: tuples[ENERGY])[ENERGY]]
         let text = getText(fields: fields)
         
-        return [entry, icons, text]
+        return [entry, icons, colors, text]
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -146,7 +155,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let date = cells[indexPath.item][0] as? Date {
+        if let date = cells[indexPath.item][ENTRY_INDEX] as? Date {
             let cell = entriesView.dequeueReusableCell(withReuseIdentifier: DateCell.identifier, for: indexPath) as! DateCell
             
             let dateFormatter = DateFormatter()
@@ -157,10 +166,11 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
             
             return cell
         }
-        if let entry = cells[indexPath.item][0] as? Entry {
+        if let entry = cells[indexPath.item][ENTRY_INDEX] as? Entry {
             let cell = entriesView.dequeueReusableCell(withReuseIdentifier: EntryCell.identifier, for: indexPath) as! EntryCell
-            guard let images = cells[indexPath.item][1] as? [UIImage?] else { return cell }
-            guard let text = cells[indexPath.item][2] as? String else { return cell }
+            guard let images = cells[indexPath.item][ICON_INDEX] as? [UIImage?] else { return cell }
+            guard let colors = cells[indexPath.item][COLOR_INDEX] as? [UIColor] else { return cell }
+            guard let text = cells[indexPath.item][TEXT_INDEX] as? String else { return cell }
             cell.position = indexPath.item
             cell.contentView.layer.cornerRadius = 10
             cell.arrowButton.tag = cell.position
@@ -170,26 +180,26 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
             dateFormatter.dateFormat = "h:mm a"
             cell.date.text = dateFormatter.string(from: entry.time ?? Date())
 
-            cell.setIcons(icons: images)
+            cell.setIcons(icons: images, colors: colors)
             cell.setSummary(text: text)
             
             return cell
         }
         
         let cell = entriesView.dequeueReusableCell(withReuseIdentifier: DateCell.identifier, for: indexPath) as! DateCell
-        cell.date.text = cells[indexPath.item][0] as? String ?? ""
+        cell.date.text = cells[indexPath.item][ENTRY_INDEX] as? String ?? ""
 
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if cells[indexPath.item][0] is String {
+        if cells[indexPath.item][ENTRY_INDEX] is String {
             return CGSize(width: view.frame.width - 40, height: 10)
         }
-        if cells[indexPath.item][0] is Date {
+        if cells[indexPath.item][ENTRY_INDEX] is Date {
             return CGSize(width: view.frame.width - 40, height: 50)
         }
-        if let entry = cells[indexPath.item][0] as? Entry {
+        if let entry = cells[indexPath.item][ENTRY_INDEX] as? Entry {
             let summaryFieldCount = entry.fields?.suffix(from: 2).filter({ $0.isSummarizable() && $0.enabled }).count ?? 0
             return CGSize(width: Int(view.frame.width) - 40, height: 70 + (30 * summaryFieldCount))
         }
@@ -211,7 +221,7 @@ class EntryListViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @objc func didTapArrowButton(_ sender: UIButton) {
-        guard let entry = cells[sender.tag][0] as? Entry else { return }
+        guard let entry = cells[sender.tag][ENTRY_INDEX] as? Entry else { return }
         self.navigationController?.pushViewController(EntryCreationViewController(entry: entry), animated: true)
     }
 }

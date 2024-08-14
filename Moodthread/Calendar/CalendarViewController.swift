@@ -179,21 +179,29 @@ class CalendarViewController: UIViewController, UICalendarViewDelegate, UICalend
         case _ where StatsManager.numberStats.contains(currentOption.1):
             guard let values = statsManager.getNumberStats(date: dateComponents, for: currentOption) else { return .default() }
             let icons = Appearance.getIcons(values: values)
+            let colors = Appearance.getColor(values: values)
             var icon = icons[2]
+            var color = colors[2]
             
-            if(currentOption.0 == "Mood") { icon = icons[0] }
-            else if(currentOption.0 == "Energy") { icon = icons[1] }
+            if(currentOption.0 == "Mood") {
+                icon = icons[0]
+                color = colors[0]
+            }
+            else if(currentOption.0 == "Energy") {
+                icon = icons[1]
+                color = colors[1]
+            }
             else if(icon == nil) { return .default(color: tintColor) }
             else { return formatTextDecoration(value: values.v) }
             
-            return formatIconDecoration(icon: icon, color: Appearance.getColor(values: values))
+            return formatIconDecoration(icon: icon, color: color)
         case "Recorded":
             let value = statsManager.getBooleanStats(date: dateComponents, for: currentOption) ?? false
             if !value { return .default(color: tintColor) }
             return formatIconDecoration(icon: UIImage(systemName: "doc.text"), color: tintColor)
         case "Always True", "Once True":
             let value = statsManager.getBooleanStats(date: dateComponents, for: currentOption) ?? false
-            return formatIconDecoration(icon: value ? UIImage(systemName: "checkmark") : UIImage(systemName: "xmark"), color: value ? .green : .red)
+            return formatIconDecoration(icon: value ? UIImage(systemName: "checkmark") : UIImage(systemName: "xmark"), color: value ? Appearance.ICON_GREEN : Appearance.ICON_RED)
         default:
             return .default(color: tintColor)
         }
