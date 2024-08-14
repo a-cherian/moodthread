@@ -23,7 +23,6 @@ class StepperView: UIView, UITextFieldDelegate {
             valueStepper.value = Double(value)
             valueTextField.text = String(value)
             delegate?.didStepValue(value: value, type: itemLabel.text ?? "")
-//            detailTextLabel?.text = String(value)
         }
     }
     
@@ -134,8 +133,6 @@ class StepperView: UIView, UITextFieldDelegate {
     
     @objc func didTextChange() {
         value = Int(valueTextField.text ?? "0") ?? 0
-//        valueStepper.value = Double(value)
-//        delegate?.didChangeValue(value: value, position: position)
     }
     
 }

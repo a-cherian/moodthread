@@ -42,11 +42,7 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
                 stackView.addArrangedSubview(maxStepper)
                 
                 configureRowView(row: minStepper)
-//                configureStepper(stepper: minStepper)
                 configureRowView(row: maxStepper)
-//                configureStepper(stepper: maxStepper)
-//                cell.config = config
-//                cell.extras = [config.minValue, config.maxValue]
             }
             
             delegate?.didModify(config: config, position: position)
@@ -88,7 +84,6 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
     
     lazy var itemLabel: UITextField = {
         let textField = UITextField()
-//        textField.backgroundColor = .black
         textField.textColor = .white
         textField.textAlignment = .left
         textField.text = String(0)
@@ -137,13 +132,10 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
         button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
         button.setTitleColor(.gray, for: .normal)
-//        button.imageView?.contentMode = .scaleAspectFit
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 20)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         button.adjustsImageWhenDisabled = false
         button.isEnabled = false
-//        button.titleLabel?.numberOfLines = 1
-//        button.titleLabel?.lineBreakMode = .
         
         return button
     }()
@@ -189,8 +181,6 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
     }
     
     func addSubviews() {
-//        contentView.addSubview(container)
-//        container.addSubview(tableView)
         contentView.addSubview(stackView)
         
         labelView.addSubview(itemLabel)
@@ -200,13 +190,9 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
         dropdownView.addSubview(typeLabel)
         dropdownView.addSubview(dropdownButton)
         stackView.addArrangedSubview(dropdownView)
-        
-//        stackView.addArrangedSubview(pickerView)
     }
 
     func configureUI() {
-//        configureContainer()
-//        configureTableView()
         configureStackView()
         
         configureRowView(row: labelView)
@@ -256,8 +242,7 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
             label.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: sibling.trailingAnchor),
             label.topAnchor.constraint(equalTo: parent.topAnchor, constant: 15),
-            label.bottomAnchor.constraint(equalTo: parent.bottomAnchor, constant: -15),
-//            label.heightAnchor.constraint(equalToConstant: 40)
+            label.bottomAnchor.constraint(equalTo: parent.bottomAnchor, constant: -15)
         ])
     }
     
@@ -275,7 +260,6 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
     func configurePicker() {
         pickerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-//            pickerView.heightAnchor.constraint(lessThanOrEqualToConstant: <#T##CGFloat#>: 200)
             pickerView.heightAnchor.constraint(equalToConstant: 100).withPriority(999)
         ])
     }
@@ -293,12 +277,10 @@ class CustomFieldCell: UITableViewCell, StepperViewDelegate, UITextFieldDelegate
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return CustomFieldCell.validTypes.count
-//        return Type.allCases.count - 1
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return CustomFieldCell.validTypes[row].rawValue
-//        return Type.allCases[row].rawValue
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

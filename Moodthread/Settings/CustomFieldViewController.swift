@@ -34,7 +34,6 @@ class CustomFieldViewController: SettingsTableViewController, UITableViewDataSou
         tableView.register(ActionCell.self, forCellReuseIdentifier: ActionCell.identifier)
         
         tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 100
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -69,7 +68,6 @@ class CustomFieldViewController: SettingsTableViewController, UITableViewDataSou
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-//        return dataSource.count + 2
         return dataSource.count + 1
     }
     
@@ -80,7 +78,6 @@ class CustomFieldViewController: SettingsTableViewController, UITableViewDataSou
     func didUpdateView() {
         UIView.performWithoutAnimation {
             tableView.beginUpdates()
-//            tableView.reloadData()
             tableView.endUpdates()
         }
     }
@@ -107,15 +104,8 @@ class CustomFieldViewController: SettingsTableViewController, UITableViewDataSou
         }
     }
     
-//    func saveFields() {
-//        let configsArray = dataSource.compactMap { $0.stringify() }
-//
-//        let userDefaults = UserDefaults.standard
-////        userDefaults.removeObject(forKey: Constants.CUSTOM_FIELDS_KEY)
-//        userDefaults.set(configsArray, forKey: Constants.CUSTOM_FIELDS_KEY)
-//    }
-    
     func didAddOccur() {
+        view.endEditing(true)
         dataSource.append(ItemConfiguration(label: "[Enter Label]", type: .slider))
         tableView.reloadData()
     }
